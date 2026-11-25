@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 56" width="190" height="56">
+  <defs>
+    <linearGradient id="b1" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#B9C9FF"/><stop offset="1" stop-color="#7563E8"/></linearGradient>
+    <linearGradient id="b2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFD9E9"/><stop offset="1" stop-color="#E58AB6"/></linearGradient>
+    <linearGradient id="b3" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#CFF0E0"/><stop offset="1" stop-color="#49B98B"/></linearGradient>
+    <linearGradient id="b4" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFE4D0"/><stop offset="1" stop-color="#F2B65E"/></linearGradient>
+  </defs>
+  <g stroke="#FFFFFF" stroke-width="3">
+    <g><circle cx="28" cy="28" r="24" fill="url(#b1)"/><circle cx="28" cy="22" r="9" fill="#FFF0DC"/><path d="M12 50c2-12 8-17 16-17s14 5 16 17" fill="#FFFFFF" opacity=".85"/></g>
+    <g><circle cx="76" cy="28" r="24" fill="url(#b2)"/><circle cx="76" cy="22" r="9" fill="#FFE0C4"/><path d="M60 50c2-12 8-17 16-17s14 5 16 17" fill="#7563E8" opacity=".75"/></g>
+    <g><circle cx="124" cy="28" r="24" fill="url(#b3)"/><circle cx="124" cy="22" r="9" fill="#FFD9B8"/><path d="M108 50c2-12 8-17 16-17s14 5 16 17" fill="#FFFFFF" opacity=".85"/></g>
+    <g><circle cx="172" cy="28" r="24" fill="url(#b4)"/><circle cx="172" cy="22" r="9" fill="#FFF0DC"/><path d="M156 50c2-12 8-17 16-17s14 5 16 17" fill="#7563E8" opacity=".7"/></g>
+  </g>
+</svg>

@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMid slice" xmlns:c2pa="http://c2pa.org/manifest">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8873fa"/>
+      <stop offset="0.5" stop-color="#9b88f8"/>
+      <stop offset="1" stop-color="#c9aaf3"/>
+    </linearGradient>
+    <radialGradient id="pinkGlow" cx="0.95" cy="0.9" r="0.45">
+      <stop offset="0" stop-color="#ffc2e2" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#ffc2e2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.6" stop-color="#e6dcff" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#e6dcff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="portal" cx="0.5" cy="0.55" r="0.6">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.35" stop-color="#bdf0ff"/>
+      <stop offset="0.75" stop-color="#a98cff"/>
+      <stop offset="1" stop-color="#8a6cf0"/>
+    </radialGradient>
+    <linearGradient id="grassTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c2f08c"/>
+      <stop offset="1" stop-color="#7fd163"/>
+    </linearGradient>
+    <linearGradient id="grassLip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6fc257"/>
+      <stop offset="1" stop-color="#4a9a4c"/>
+    </linearGradient>
+    <linearGradient id="soil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b88467"/>
+      <stop offset="1" stop-color="#85597a"/>
+    </linearGradient>
+    <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9c7ca8"/>
+      <stop offset="1" stop-color="#4c3f86"/>
+    </linearGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f1ebff"/>
+      <stop offset="1" stop-color="#bcaef0"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe59a"/>
+      <stop offset="1" stop-color="#e8a94a"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b6ecff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="ray" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="leaf" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#a6e883"/>
+      <stop offset="1" stop-color="#4ea64e"/>
+    </radialGradient>
+    <radialGradient id="blossom" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#ffd3ea"/>
+      <stop offset="1" stop-color="#f08fc4"/>
+    </radialGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="soft2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <clipPath id="rockClip">
+      <path d="M-262,246 C-252,282 -218,306 -172,324 C-136,338 -112,352 -90,368 C-72,382 -40,390 0,392 C40,390 72,382 90,368 C112,352 136,338 172,324 C218,306 252,282 262,246 Z"/>
+    </clipPath>
+
+    <g id="cloud">
+      <ellipse cx="0" cy="0" rx="120" ry="34"/>
+      <ellipse cx="-60" cy="-22" rx="55" ry="38"/>
+      <ellipse cx="10" cy="-38" rx="62" ry="46"/>
+      <ellipse cx="72" cy="-16" rx="50" ry="32"/>
+    </g>
+    <path id="spark" d="M0,-14 C2,-4 4,-2 14,0 C4,2 2,4 0,14 C-2,4 -4,2 -14,0 C-4,-2 -2,-4 0,-14Z"/>
+
+    <g id="tree">
+      <ellipse cx="0" cy="24" rx="26" ry="7" fill="#3f7f45" opacity="0.35"/>
+      <rect x="-4" y="-4" width="8" height="28" rx="3" fill="#8a5f58"/>
+      <circle cx="-14" cy="-6" r="17" fill="url(#leaf)"/>
+      <circle cx="15" cy="-8" r="18" fill="url(#leaf)"/>
+      <circle cx="0" cy="-24" r="25" fill="url(#leaf)"/>
+      <circle cx="-8" cy="-30" r="9" fill="#d4f6b0" opacity="0.5"/>
+    </g>
+    <g id="tree2">
+      <ellipse cx="0" cy="24" rx="26" ry="7" fill="#3f7f45" opacity="0.35"/>
+      <rect x="-4" y="-4" width="8" height="28" rx="3" fill="#8a5f58"/>
+      <circle cx="-14" cy="-6" r="17" fill="url(#blossom)"/>
+      <circle cx="15" cy="-8" r="18" fill="url(#blossom)"/>
+      <circle cx="0" cy="-24" r="25" fill="url(#blossom)"/>
+      <circle cx="-8" cy="-30" r="9" fill="#ffffff" opacity="0.45"/>
+    </g>
+    <g id="bush">
+      <ellipse cx="0" cy="6" rx="22" ry="5" fill="#3f7f45" opacity="0.3"/>
+      <circle cx="-9" cy="-2" r="11" fill="url(#leaf)"/>
+      <circle cx="8" cy="-3" r="12" fill="url(#leaf)"/>
+      <circle cx="0" cy="-9" r="11" fill="url(#leaf)"/>
+    </g>
+    <g id="orb">
+      <circle r="16" fill="#ffffff" opacity="0.25" filter="url(#soft2)"/>
+      <circle r="5" fill="#ffffff"/>
+    </g>
+  </defs>
+
+  <!-- background -->
+  <rect width="1600" height="400" fill="url(#bg)"/>
+  <rect width="1600" height="400" fill="url(#pinkGlow)"/>
+
+  <!-- soft bokeh -->
+  <g fill="#ffffff">
+    <circle cx="760" cy="90" r="34" opacity="0.08"/>
+    <circle cx="880" cy="310" r="50" opacity="0.07"/>
+    <circle cx="1530" cy="200" r="40" opacity="0.08"/>
+    <circle cx="640" cy="230" r="26" opacity="0.06"/>
+  </g>
+
+  <!-- back clouds -->
+  <g fill="#ffffff">
+    <use href="#cloud" transform="translate(850,140) scale(1.2)" opacity="0.3"/>
+    <use href="#cloud" transform="translate(1000,70) scale(0.65)" opacity="0.35"/>
+    <use href="#cloud" transform="translate(1530,110) scale(0.9)" opacity="0.35"/>
+    <use href="#cloud" transform="translate(720,400) scale(1.8,1)" opacity="0.35"/>
+  </g>
+
+  <!-- ISLAND -->
+  <g transform="translate(1250,0)">
+    <!-- halo -->
+    <circle cx="0" cy="190" r="300" fill="url(#halo)"/>
+
+    <!-- small floating islets -->
+    <g transform="translate(-345,95) scale(0.7)">
+      <path d="M-60,12 C-52,40 -20,60 0,78 C20,60 52,40 60,12 Z" fill="url(#rock)"/>
+      <ellipse cx="0" cy="10" rx="62" ry="16" fill="url(#grassTop)"/>
+      <use href="#tree2" transform="translate(-12,-2) scale(0.6)"/>
+    </g>
+    <g transform="translate(335,330) scale(0.8)">
+      <path d="M-60,12 C-52,40 -20,60 0,78 C20,60 52,40 60,12 Z" fill="url(#rock)"/>
+      <ellipse cx="0" cy="10" rx="62" ry="16" fill="url(#grassTop)"/>
+      <use href="#bush" transform="translate(14,2)"/>
+    </g>
+
+    <!-- rock underside -->
+    <path d="M-262,246 C-252,282 -218,306 -172,324 C-136,338 -112,352 -90,368 C-72,382 -40,390 0,392 C40,390 72,382 90,368 C112,352 136,338 172,324 C218,306 252,282 262,246 Z" fill="url(#rock)"/>
+    <g clip-path="url(#rockClip)">
+      <polygon points="-262,246 -172,324 -90,368 -120,290 -200,262" fill="#c3a6cf" opacity="0.5"/>
+      <polygon points="-120,290 -90,368 0,392 20,320 -40,296" fill="#6d5a9a" opacity="0.5"/>
+      <polygon points="20,320 0,392 90,368 140,300 80,306" fill="#5b4a8c" opacity="0.45"/>
+      <polygon points="262,246 172,324 90,368 140,300 220,270" fill="#3f3278" opacity="0.55"/>
+      <polygon points="-200,262 -120,290 -90,368 -172,324" fill="#a98bb8" opacity="0.35"/>
+      <path d="M-60,330 L-30,372 M60,326 L40,376 M-150,290 L-110,330 M150,296 L120,336" stroke="#ffffff" stroke-opacity="0.18" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- vines -->
+    <g stroke="#5fae55" stroke-width="3" fill="none" stroke-linecap="round">
+      <path d="M-60,300 C-64,318 -56,330 -60,346"/>
+      <path d="M90,298 C96,316 88,330 94,348"/>
+      <path d="M200,278 C204,294 198,304 202,318"/>
+    </g>
+    <g fill="#79c968">
+      <circle cx="-60" cy="346" r="4"/><circle cx="-63" cy="326" r="3.5"/>
+      <circle cx="94" cy="348" r="4"/><circle cx="90" cy="328" r="3.5"/>
+      <circle cx="202" cy="318" r="3.5"/>
+    </g>
+
+    <!-- soil + grass lip -->
+    <path d="M-258,250 C-240,290 -140,306 0,308 C140,306 240,290 258,250 Z" fill="url(#soil)"/>
+    <path d="M-262,240 A262,60 0 0 0 262,240 L262,256 A262,66 0 0 1 -262,256 Z" fill="url(#grassLip)"/>
+
+    <!-- grass top -->
+    <ellipse cx="0" cy="240" rx="262" ry="60" fill="url(#grassTop)"/>
+    <ellipse cx="20" cy="232" rx="210" ry="40" fill="#d6f9a8" opacity="0.35"/>
+
+    <!-- pond + waterfall -->
+    <ellipse cx="-150" cy="262" rx="44" ry="10" fill="#8fdcff"/>
+    <ellipse cx="-156" cy="260" rx="26" ry="4" fill="#ffffff" opacity="0.5"/>
+    <path d="M-166,274 C-168,320 -156,350 -152,380 L-132,380 C-136,350 -144,320 -138,274 Z" fill="url(#water)"/>
+    <path d="M-158,290 C-158,320 -150,345 -146,372" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" fill="none"/>
+
+    <!-- stone path -->
+    <g fill="#f3e9cc">
+      <ellipse cx="0" cy="258" rx="34" ry="7"/>
+      <ellipse cx="-14" cy="272" rx="26" ry="6"/>
+      <ellipse cx="14" cy="285" rx="20" ry="5"/>
+    </g>
+
+    <!-- back trees -->
+    <use href="#tree" transform="translate(-205,236) scale(1.15)"/>
+    <use href="#tree2" transform="translate(-160,226) scale(0.85)"/>
+    <use href="#tree2" transform="translate(190,232) scale(1.2)"/>
+    <use href="#tree" transform="translate(232,244) scale(0.85)"/>
+
+    <!-- light rays on grass -->
+    <path d="M-48,236 L-120,296 L120,296 L48,236 Z" fill="url(#ray)"/>
+
+    <!-- portal glow behind arch -->
+    <circle cx="0" cy="170" r="130" fill="#d9f6ff" opacity="0.35" filter="url(#soft)"/>
+
+    <!-- gateway -->
+    <ellipse cx="0" cy="238" rx="104" ry="18" fill="#cfc3f5"/>
+    <ellipse cx="0" cy="234" rx="100" ry="15" fill="url(#stone)"/>
+    <path d="M-80,236 L-80,165 A80,80 0 0 1 80,165 L80,236 Z" fill="url(#stone)"/>
+    <path d="M30,236 L30,150 A80,80 0 0 1 80,165 L80,236 Z" fill="#8c7bd0" opacity="0.18"/>
+    <path d="M-48,236 L-48,172 A48,48 0 0 1 48,172 L48,236 Z" fill="url(#portal)"/>
+    <path d="M-48,236 L-48,172 A48,48 0 0 1 48,172 L48,236" fill="none" stroke="#8c7bd0" stroke-opacity="0.5" stroke-width="3"/>
+    <ellipse cx="0" cy="190" rx="26" ry="38" fill="#ffffff" opacity="0.5" filter="url(#soft2)"/>
+    <!-- gateway details -->
+    <g fill="#cbbff3">
+      <rect x="-80" y="205" width="32" height="4" rx="2"/>
+      <rect x="48" y="205" width="32" height="4" rx="2"/>
+      <rect x="-80" y="222" width="32" height="4" rx="2"/>
+      <rect x="48" y="222" width="32" height="4" rx="2"/>
+    </g>
+    <circle cx="0" cy="106" r="7" fill="#ff8fd0"/>
+    <circle cx="-2" cy="104" r="2.5" fill="#ffffff" opacity="0.8"/>
+    <!-- golden roof -->
+    <path d="M-100,100 C-74,44 -34,24 0,14 C34,24 74,44 100,100 Z" fill="url(#gold)"/>
+    <path d="M0,14 C34,24 74,44 100,100 L40,100 C34,60 20,34 0,14 Z" fill="#d9953a" opacity="0.35"/>
+    <rect x="-104" y="96" width="208" height="11" rx="5.5" fill="#d9a94d"/>
+    <circle cx="0" cy="12" r="9" fill="url(#gold)"/>
+    <rect x="-1.5" y="-14" width="3" height="14" fill="#d9a94d"/>
+    <use href="#spark" transform="translate(0,-18) scale(0.5)" fill="#fff6c9"/>
+
+    <!-- front trees + bushes -->
+    <use href="#bush" transform="translate(-96,262) scale(1.1)"/>
+    <use href="#bush" transform="translate(104,268) scale(1.2)"/>
+    <use href="#tree" transform="translate(150,262) scale(0.95)"/>
+    <use href="#bush" transform="translate(-205,262)"/>
+
+    <!-- flowers -->
+    <g>
+      <circle cx="-70" cy="278" r="3.5" fill="#ffffff"/><circle cx="-58" cy="284" r="3" fill="#ffd1ea"/>
+      <circle cx="60" cy="280" r="3.5" fill="#fff3a8"/><circle cx="76" cy="288" r="3" fill="#ffffff"/>
+      <circle cx="-30" cy="294" r="3" fill="#ffd1ea"/><circle cx="40" cy="296" r="3.5" fill="#ffffff"/>
+      <circle cx="210" cy="268" r="3" fill="#fff3a8"/><circle cx="-235" cy="250" r="3" fill="#ffffff"/>
+      <circle cx="-110" cy="288" r="3" fill="#fff3a8"/><circle cx="120" cy="296" r="3" fill="#ffd1ea"/>
+    </g>
+
+    <!-- floating orbs -->
+    <use href="#orb" transform="translate(-115,115)"/>
+    <use href="#orb" transform="translate(128,88) scale(1.2)"/>
+    <use href="#orb" transform="translate(160,170) scale(0.8)"/>
+    <use href="#orb" transform="translate(-150,190) scale(0.7)"/>
+  </g>
+
+  <!-- front clouds -->
+  <g fill="#ffffff">
+    <use href="#cloud" transform="translate(1160,420) scale(2.3,1.1)" opacity="0.7"/>
+    <use href="#cloud" transform="translate(1500,415) scale(1.6)" opacity="0.65"/>
+    <use href="#cloud" transform="translate(950,425) scale(1.4,0.9)" opacity="0.5"/>
+  </g>
+
+  <!-- sparkles -->
+  <g fill="#ffffff">
+    <use href="#spark" transform="translate(1000,60) scale(0.9)" opacity="0.9"/>
+    <use href="#spark" transform="translate(1540,60) scale(0.7)" opacity="0.8"/>
+    <use href="#spark" transform="translate(900,260) scale(0.6)" opacity="0.7"/>
+    <use href="#spark" transform="translate(1520,300) scale(0.55)" opacity="0.7"/>
+    <use href="#spark" transform="translate(1420,40) scale(0.55)" opacity="0.8"/>
+    <use href="#spark" transform="translate(1090,150) scale(0.45)" opacity="0.7"/>
+  </g>
+<metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTplM2JiNTRhZC1iZmYzLTQ2MDYtYmI2Yi1jZWU5YmNmMTVkYTkAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaMLso4l/k32nYbh6O+BxY0wAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDpjNDlhMjc0Yi0wNWRhLTRkY2MtYTA0OC00ZDk1ZjU5ODQzMWNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoPC6MSZI/40DldvQnXZyzxQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgglsKZ0950Z6ob6yHnWgOCLCUazb+bLC95k2stTBIZ1i6kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaCkpdTonmgwrsnK9kRSW6ToAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRMAAAAAAAAAAAAAAAAZGhhc2hYIEXhftwnBdrj2JRHTM3EgSZg68/jRCxx4Vb7DpCu5+4iZG5hbWVuanVtYmYgbWFuaWZlc3RqZXhjbHVzaW9uc4GiZXN0YXJ0GTK0Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmUzYmI1NGFkLWJmZjMtNDYwNi1iYjZiLWNlZTliY2YxNWRhOS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjExOTZlMDM5LWJkNDktNGJmNS05NTdlLTM1OGVhYTkxZmQ2OHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCWwpnT3nRnqhvrIedaA4IsJRrNv5ssL3mTay1MEhnWLqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggGxnUeWmqDlj7hp6aVdPULkkjvvO43kxDSs2RVELozPGiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgg6AMKGYMk1rKy8bk/6+DEGNj/dzAzI1HNXWUZmANnugd0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQPgYRbcJwoPdHlslqqD0Tw+yf7zHasGjpgR6lP1iA6u541E2y6mHE+kqTons5soFyc0FGskmgSpffmSsrAVm7z0=</c2pa:manifest></metadata></svg>

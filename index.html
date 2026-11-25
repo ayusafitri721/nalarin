@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#7563E8" />
+    <meta name="description" content="Nalarin — Learn Beyond Limits. Jelajahi pengetahuan, belajar sambil bermain, dan bertumbuh bersama." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('nalarin-store');
+          if (!raw) return;
+          var t = JSON.parse(raw).state.theme;
+          if (!t) return;
+          var mode = t.mode || 'system';
+          var dark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          if (t.accent) document.documentElement.style.setProperty('--accent', t.accent);
+          if (t.density) document.documentElement.dataset.density = t.density;
+        } catch (e) {}
+      })();
+    </script>
+    <title>Nalarin — Learn Beyond Limits</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

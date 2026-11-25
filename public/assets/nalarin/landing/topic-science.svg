@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 170" width="200" height="170">
+  <defs>
+    <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9C7BD8"/><stop offset="1" stop-color="#5B4B8A"/></linearGradient>
+    <linearGradient id="flask" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#B9C9FF"/><stop offset="1" stop-color="#7563E8"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#4B3B7A" flood-opacity=".22"/></filter>
+  </defs>
+  <g fill="#FFFFFF" opacity=".8"><ellipse cx="30" cy="50" rx="18" ry="7"/><ellipse cx="46" cy="46" rx="12" ry="6"/><ellipse cx="172" cy="62" rx="20" ry="8"/></g>
+  <path d="M28 96c20 10 124 10 144 0l-22 38c-28 18-72 18-100 0L28 96Z" fill="url(#rock)" filter="url(#sh)"/>
+  <ellipse cx="100" cy="95" rx="72" ry="16" fill="#7DCB8B"/>
+  <ellipse cx="100" cy="92" rx="66" ry="12" fill="#A6E0A6"/>
+  <g filter="url(#sh)">
+    <path d="M92 38h16v18l14 28c4 8-2 16-11 16H89c-9 0-15-8-11-16l14-28V38Z" fill="url(#flask)"/>
+    <rect x="88" y="34" width="24" height="7" rx="3" fill="#5546C5"/>
+    <path d="M83 76c10 5 24 5 34 0l5 10c3 6-2 12-9 12H87c-7 0-12-6-9-12l5-10Z" fill="#49B98B" opacity=".85"/>
+    <circle cx="94" cy="80" r="3" fill="#FFF" opacity=".7"/>
+  </g>
+</svg>
