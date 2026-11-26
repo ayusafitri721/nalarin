@@ -5,13 +5,7 @@ import type { Universe } from '@/types'
 export function Logo({ compact = false, className }: { compact?: boolean; className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-2.5 select-none', className)}>
-      <span className="relative grid h-9 w-9 place-items-center rounded-xl text-white shadow-[0_6px_14px_-6px_var(--accent)]" style={{ background: 'var(--accent)' }}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 2.6 20 7v10l-8 4.4L4 17V7l8-4.4Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-          <path d="M12 7.2 16.4 9.6v4.8L12 16.8 7.6 14.4V9.6L12 7.2Z" fill="currentColor" opacity=".9" />
-          <circle cx="12" cy="12" r="1.6" fill="var(--accent)" />
-        </svg>
-      </span>
+      <img src="/assets/nalarin/landing/logo.svg" alt="" aria-hidden="true" className="h-9 w-9 shrink-0 object-contain" />
       {!compact && <span className="font-display text-[19px] font-extrabold tracking-tight">Nalarin</span>}
     </span>
   )
