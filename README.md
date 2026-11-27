@@ -110,7 +110,7 @@ VITE_SUPABASE_ANON_KEY=<publishable-key>
 ```
 
 4. Jalankan ulang `npm run dev`.
-5. Opsional: aktifkan Google provider di **Authentication → Providers** dan daftarkan `http://localhost:5173/**` pada redirect URLs.
+5. Opsional: aktifkan Google provider di **Authentication → Providers**. Daftarkan URL aplikasi pada **Authentication → URL Configuration → Redirect URLs**, misalnya `http://localhost:5174/**` sesuai port yang dipakai. UUID ini juga dipakai untuk tautan reset password `/reset-password`.
 
 ### 4. Build produksi
 

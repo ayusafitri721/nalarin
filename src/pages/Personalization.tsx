@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Check, Monitor, Moon, RotateCcw, Sun } from 'lucide-react'
-import { Logo, Mascot } from '@/components/Illustrations'
-import { accentPresets } from '@/data/content'
+import { Logo } from '@/components/Illustrations'
+import { accentPresets, companionAssets } from '@/data/content'
 import { cn, contrastRatio, isHexColor } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 import type { ThemeState } from '@/types'
@@ -142,7 +142,7 @@ export default function Personalization() {
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-3 rounded-xl bg-surface p-3 shadow-card">
-                <Mascot id="nori" size={52} />
+                <img src={companionAssets.nori} alt="" aria-hidden="true" className="h-[52px] w-[52px] object-contain" />
                 <div className="flex-1"><div className="h-2 w-2/3 rounded bg-line" /><div className="mt-2 h-2 w-1/2 rounded bg-line" /></div>
               </div>
             </div>

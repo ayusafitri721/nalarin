@@ -232,11 +232,18 @@ export const skillScores = [
 ]
 
 export const companions = [
-  { id: 'nori', name: 'Nori', description: 'Sahabat penasaran yang selalu siap menemukan hal baru.', color: '#8E7BF0' },
-  { id: 'lumi', name: 'Lumi', description: 'Ceria dan hangat, cocok menemani belajar santai.', color: '#F2B65E' },
-  { id: 'kiko', name: 'Kiko', description: 'Pemberani dan suka tantangan logika.', color: '#E5806C' },
-  { id: 'mimo', name: 'Mimo', description: 'Tenang, teliti, dan gemar membaca.', color: '#5C8DF6' },
+  { id: 'nori', name: 'Mochi', description: 'Sahabat penasaran yang selalu siap menemukan hal baru.', color: '#8E7BF0' },
+  { id: 'kiko', name: 'Fumi', description: 'Pemberani dan suka tantangan logika.', color: '#F08A3C' },
+  { id: 'mimo', name: 'Pipi', description: 'Tenang, teliti, dan gemar membaca.', color: '#A78BFA' },
+  { id: 'lumi', name: 'Koma', description: 'Ceria dan hangat, cocok menemani belajar santai.', color: '#F2B65E' },
 ]
+
+export const companionAssets: Record<string, string> = {
+  nori: '/assets/nalarin/companion-nori.svg',
+  kiko: '/assets/nalarin/companion-kiko.svg',
+  mimo: '/assets/nalarin/companion-mimo.svg',
+  lumi: '/assets/nalarin/companion-lumi.svg',
+}
 
 export const accentPresets = [
   { name: 'Lavender', value: '#7563E8', soft: '#EEEBFF' },

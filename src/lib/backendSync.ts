@@ -30,6 +30,8 @@ let timer: ReturnType<typeof setTimeout> | null = null
 let unsubStore: (() => void) | null = null
 let unsubAuth: (() => void) | null = null
 
+const LINK_NOTICE_KEY = 'nalarin:linked-account-notice'
+
 function fallbackUser(email: string): AppUser {
   const base = email.split('@')[0] || 'learner'
   return {
@@ -44,6 +46,16 @@ function fallbackUser(email: string): AppUser {
     companion: 'nori',
     avatar: '#7563E8',
   }
+}
+
+/** Akun lama menyimpan mode 'system' dengan palet default; samakan dengan landing/login. */
+function normalizeTheme(theme: ThemeState): ThemeState {
+  const untouchedDefault =
+    theme.mode === 'system' &&
+    theme.accent.toLowerCase() === '#7563e8' &&
+    theme.density === 'comfortable' &&
+    theme.backgroundStyle === 'minimal'
+  return untouchedDefault ? { ...theme, mode: 'light' } : theme
 }
 
 function currentProgress(): ProgressPayload {
@@ -66,7 +78,7 @@ function applyRemote(remote: RemoteState) {
   useAppStore.setState({
     ...(mergedUser ? { user: mergedUser } : {}),
     ...(remote.onboarding ? { onboarding: remote.onboarding } : {}),
-    ...(remote.theme ? { theme: remote.theme } : {}),
+    ...(remote.theme ? { theme: normalizeTheme(remote.theme) } : {}),
     ...(remote.progress
       ? {
           completedLessons: remote.progress.completedLessons,
@@ -102,11 +114,19 @@ function schedulePush() {
 
 async function hydrate(): Promise<void> {
   if (!supabase) { ready = true; return }
-  const { data } = await supabase.auth.getUser()
-  const authUser = data.user
+
+  // getSession() membaca sesi dari storage secara lokal. getUser() melakukan
+  // request ke server dan bisa gagal sesaat setelah redirect OAuth. Pakai
+  // session(user) sebagai fallback supaya tidak terjadi logout palsu.
+  const { data: sessionData } = await supabase.auth.getSession()
+  let authUser = sessionData.session?.user ?? null
   if (!authUser) {
-    // Sesi Supabase adalah sumber kebenaran. User lokal yang tersisa dari akun
-    // sebelumnya tidak boleh dianggap masih login.
+    const { data: verified } = await supabase.auth.getUser()
+    authUser = verified.user
+  }
+  if (!authUser) {
+    // Tidak ada sesi sah. User lokal yang tertinggal dari akun sebelumnya
+    // tidak boleh dianggap masih login.
     if (useAppStore.getState().user) useAppStore.getState().signOut()
     ready = true
     return
@@ -119,6 +139,23 @@ async function hydrate(): Promise<void> {
     if (authUser.email) useAppStore.getState().signIn(authUser.email)
     const remote = await fetchRemoteState(authUser.id)
     if (remote) applyRemote(remote)
+
+    // Google yang memakai email akun password akan di-link otomatis Supabase.
+    // Kasih tahu sekali supaya user tidak mengira datanya berpindah akun.
+    try {
+      const identities = await supabase.auth.getUserIdentities()
+      const providers = identities.data?.identities?.map((identity) => identity.provider) ?? []
+      if (
+        providers.includes('email') &&
+        providers.includes('google') &&
+        !sessionStorage.getItem(LINK_NOTICE_KEY)
+      ) {
+        sessionStorage.setItem(LINK_NOTICE_KEY, '1')
+        useAppStore.getState().showToast('Google sudah terhubung ke akun emailmu. Progres dan datanya tetap tersimpan.', 'info')
+      }
+    } catch {
+      // Identitas bersifat opsional; gagal fetch tidak boleh menggagalkan hydrate.
+    }
   } catch (err) {
     console.error('[backend] hydrate failed:', err)
   } finally {
@@ -154,7 +191,14 @@ export function startBackendSync(onReady?: () => void): () => void {
     if (event === 'SIGNED_OUT') {
       ready = false
       if (timer) { clearTimeout(timer); timer = null }
-      useAppStore.getState().signOut()
+      // Pastikan sesi memang hilang sebelum menghapus user lokal. Hindari
+      // signOut lokal kalau event ini diikuti sesi baru (ganti akun cepat).
+      const client = supabase
+      if (client) {
+        void client.auth.getSession().then(({ data }) => {
+          if (!data.session) useAppStore.getState().signOut()
+        })
+      }
     }
   })
   unsubAuth = () => subscription.unsubscribe()

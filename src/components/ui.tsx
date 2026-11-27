@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Check, Inbox } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
-import { Mascot } from '@/components/Illustrations'
+import { companionAssets } from '@/data/content'
 
 export function ProgressBar({ value, className, tone }: { value: number; className?: string; tone?: string }) {
   return (
@@ -92,7 +92,7 @@ export function ToastHost() {
 export function CompanionCard({ companionId, message }: { companionId: string; message: string }) {
   return (
     <div className="card flex items-center gap-3 overflow-hidden">
-      <Mascot id={companionId} size={72} className="shrink-0" />
+      <img src={companionAssets[companionId]} alt="Companion" className="h-[72px] w-[72px] shrink-0 object-contain" />
       <div className="min-w-0">
         <p className="font-display text-sm font-extrabold">My Companion</p>
         <p className="mt-1 text-xs leading-relaxed text-muted">{message}</p>

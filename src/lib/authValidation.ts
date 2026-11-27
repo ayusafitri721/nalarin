@@ -27,6 +27,15 @@ export const forgotSchema = z.object({
   email: z.string().email('Format email tidak valid'),
 })
 
+export const resetSchema = z.object({
+  password: z.string().min(8, 'Password minimal 8 karakter'),
+  confirm: z.string(),
+}).refine((d) => d.password === d.confirm, {
+  message: 'Konfirmasi password tidak cocok',
+  path: ['confirm'],
+})
+
 export type LoginForm = z.infer<typeof loginSchema>
 export type RegisterForm = z.infer<typeof registerSchema>
 export type ForgotForm = z.infer<typeof forgotSchema>
+export type ResetForm = z.infer<typeof resetSchema>

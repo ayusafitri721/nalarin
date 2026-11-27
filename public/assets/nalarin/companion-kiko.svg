@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-165 -152 335 305">
+  <defs>
+    <radialGradient id="foxHead" cx="0.4" cy="0.3" r="0.85"><stop offset="0" stop-color="#FFB36B"/><stop offset="1" stop-color="#E2702A"/></radialGradient>
+    <linearGradient id="foxBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F79A4B"/><stop offset="1" stop-color="#D9661F"/></linearGradient>
+    <filter id="soft2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <ellipse cx="0" cy="130" rx="70" ry="10" fill="#5b45c8" opacity="0.25" filter="url(#soft2)"/>
+  <g>
+    <!-- ekor besar -->
+    <path d="M-48,100 C-124,120 -142,48 -98,26 C-70,12 -48,38 -52,68 Z" fill="url(#foxBody)"/>
+    <path d="M-98,26 C-108,52 -92,78 -68,88 C-82,60 -78,38 -98,26 Z" fill="#FFF3E4"/>
+    <!-- tubuh -->
+    <path d="M-50,6 C-64,60 -54,116 0,120 C54,116 64,60 50,6 Z" fill="url(#foxBody)"/>
+    <ellipse cx="0" cy="72" rx="30" ry="40" fill="#FFF3E4"/>
+    <ellipse cx="-27" cy="124" rx="23" ry="12" fill="#8B4A2B"/>
+    <ellipse cx="27" cy="124" rx="23" ry="12" fill="#8B4A2B"/>
+    <ellipse cx="-27" cy="127" rx="13" ry="6" fill="#FFF3E4"/>
+    <ellipse cx="27" cy="127" rx="13" ry="6" fill="#FFF3E4"/>
+    <!-- kalung -->
+    <path d="M-43,8 Q0,34 43,8 L39,23 Q0,47 -39,23 Z" fill="#7563E8"/>
+    <circle cx="0" cy="30" r="8" fill="#FFD97A"/>
+    <!-- telinga -->
+    <path d="M-64,-76 L-77,-138 L-20,-102 Z" fill="#E2702A" stroke="#E2702A" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M64,-76 L77,-138 L20,-102 Z" fill="#E2702A" stroke="#E2702A" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M-60,-86 L-68,-120 L-38,-100 Z" fill="#8B4A2B"/>
+    <path d="M60,-86 L68,-120 L38,-100 Z" fill="#8B4A2B"/>
+    <!-- kepala -->
+    <ellipse cx="0" cy="-40" rx="74" ry="66" fill="url(#foxHead)"/>
+    <path d="M-72,-28 Q-50,-46 -28,-22 Q0,-46 28,-22 Q50,-46 72,-28 Q58,14 0,16 Q-58,14 -72,-28 Z" fill="#FFF3E4"/>
+    <!-- mata -->
+    <ellipse cx="-30" cy="-46" rx="12" ry="16" fill="#2a1f5c"/>
+    <ellipse cx="30" cy="-46" rx="12" ry="16" fill="#2a1f5c"/>
+    <circle cx="-26" cy="-52" r="5" fill="#fff"/>
+    <circle cx="34" cy="-52" r="5" fill="#fff"/>
+    <circle cx="-34" cy="-40" r="2.5" fill="#fff"/>
+    <circle cx="26" cy="-40" r="2.5" fill="#fff"/>
+    <ellipse cx="-52" cy="-20" rx="10" ry="6" fill="#FF9CC6" opacity="0.65"/>
+    <ellipse cx="52" cy="-20" rx="10" ry="6" fill="#FF9CC6" opacity="0.65"/>
+    <path d="M-6,-30 Q0,-24 6,-30 Q0,-36 -6,-30 Z" fill="#5a2d6e"/>
+    <path d="M-14,-20 Q0,0 14,-20 Z" fill="#5a2d6e"/>
+    <ellipse cx="0" cy="-10" rx="6" ry="4" fill="#FF8FB0"/>
+    <!-- tangan -->
+    <path d="M-46,34 C-62,50 -64,70 -58,84" stroke="#E2702A" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <circle cx="-58" cy="86" r="12" fill="#FFF3E4"/>
+    <path d="M46,30 C74,22 90,4 92,-18" stroke="#E2702A" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <circle cx="92" cy="-22" r="13" fill="#FFF3E4"/>
+    <g stroke="#FFD9B5" stroke-width="2" stroke-linecap="round"><path d="M87,-28 L87,-22 M92,-30 L92,-23 M97,-28 L97,-22"/></g>
+  </g>
+</svg>

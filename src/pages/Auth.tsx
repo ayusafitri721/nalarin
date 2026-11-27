@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,9 +10,11 @@ import {
   loginSchema,
   registerSchema,
   forgotSchema,
+  resetSchema,
   type LoginForm,
   type RegisterForm,
   type ForgotForm,
+  type ResetForm,
 } from '@/lib/authValidation'
 import { mapGoogleError, mapLoginError, mapSignupError } from '@/lib/authErrors'
 
@@ -22,13 +24,12 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
       <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
         <div className="relative hidden md:block">
           <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: 'url(/assets/nalarin/landing/bg-login-panel.svg)' }}
+            className="absolute inset-0 bg-cover"
+            style={{ backgroundImage: 'url(/assets/nalarin/landing/bg-login-panel.svg)', backgroundPosition: 'center 25%' }}
             role="img"
             aria-label="Pulau pengetahuan Nalarin dan teman belajar"
           />
           <div className="relative flex h-full flex-col justify-between p-8">
-            <Link to="/" className="relative"><Logo /></Link>
             <div className="mt-auto text-center">
               <h2 className="font-display text-3xl font-extrabold text-[#25233A] drop-shadow-sm">Welcome Back!</h2>
               <p className="mx-auto mt-2 max-w-xs text-sm text-[#5B5875]">Lanjutkan perjalanan belajarmu di Nalarin.</p>
@@ -112,7 +113,7 @@ export function Login() {
       </form>
       <div className="my-5 flex items-center gap-3 text-xs text-muted"><span className="h-px flex-1 bg-line" /> atau <span className="h-px flex-1 bg-line" /></div>
       <button className="btn btn-outline w-full py-3" onClick={signInWithGoogle}>
-        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M43.6 20.1H42V20H24v8h11.3C33.6 32.1 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 5.1 29.3 3 24 3 12.9 3 4 11.9 4 23s8.9 20 20 20c11 0 20-9 20-20 0-1-.1-2-.4-2.9Z"/><path fill="#34A853" d="M6.3 14.7l6.5 4.9C14.4 15.5 18.9 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 5.1 29.3 3 24 3 12.9 3 4 11.9 4 23c0 2.5.5 4.9 1.4 7.1l7.4-5.7c-.4-1.2-.6-2.5-.6-3.9 0-3 .9-5.8 2.5-8.1l-8.4-6.6Z"/><path fill="#FBBC05" d="M24 43c5.3 0 10.1-2 13.7-5.2l-6.5-5.4C29.3 34 26.8 35 24 35c-5.3 0-9.6-2.9-11.3-7.1l-6.5 5.4C8.9 39.2 15.8 43 24 43Z"/><path fill="#EA4335" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.4l6.5 5.4C40.7 35.6 44 29.8 44 23c0-1-.1-2-.4-2.9Z"/></svg>
+        <img src="/assets/nalarin/landing/google-icon.png" alt="" aria-hidden="true" className="h-[18px] w-[18px] object-contain" />
         Masuk dengan Google
       </button>
       <p className="mt-6 text-center text-sm text-muted">Belum punya akun? <Link to="/daftar" className="font-bold text-accent hover:underline">Daftar di sini</Link></p>
@@ -123,29 +124,37 @@ export function Login() {
 export function Register() {
   const navigate = useNavigate()
   const signIn = useAppStore((s) => s.signIn)
-  const finishOnboarding = useAppStore((s) => s.finishOnboarding)
   const showToast = useAppStore((s) => s.showToast)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) })
 
   const onSubmit = async (data: RegisterForm) => {
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.auth.signUp({ email: data.email, password: data.password, options: { data: { full_name: data.name, username: data.username } } })
+      const { data: signUpData, error } = await supabase.auth.signUp({ email: data.email, password: data.password, options: { data: { full_name: data.name, username: data.username } } })
       if (error) {
         showToast(mapSignupError(error.message), 'error')
         return
       }
-      // Kalau pendaftaran butuh verifikasi email, sesi lama bisa masih aktif.
-      // Cabut dulu supaya data akun baru tidak tersimpan ke akun lama.
+      // Supabase mengembalikan respons tanpa sesi kalau email sudah dipakai akun
+      // lain (termasuk akun Google). Jangan lanjut ke onboarding agar profil
+      // akun itu tidak tertimpa data pendaftaran baru.
+      if (!signUpData.session) {
+        await supabase.auth.signOut()
+        if (signUpData.user?.email === data.email) navigate('/verifikasi-email')
+        else showToast('Email ini sudah terdaftar. Masuk dengan Google atau gunakan email lain.', 'error')
+        return
+      }
       const { data: authData } = await supabase.auth.getUser()
-      if (authData.user?.email !== data.email) await supabase.auth.signOut()
+      if (authData.user?.email !== data.email) {
+        await supabase.auth.signOut()
+        showToast('Email ini sudah terdaftar. Masuk dengan Google atau gunakan email lain.', 'error')
+        return
+      }
     }
     // Mulai dari akun bersih: jangan bawa nama/email/progres akun sebelumnya.
+    // Onboarding sengaja belum diselesaikan di sini, supaya guard /app tetap
+    // menahan user sampai 7 langkah onboarding benar-benar selesai.
     signIn(data.email)
-    finishOnboarding({
-      name: data.name, interests: [], goals: [], dailyGoal: 10, companion: 'nori',
-      theme: { mode: 'system', accent: '#7563E8', density: 'comfortable', backgroundStyle: 'minimal' },
-    })
-    navigate('/onboarding')
+    navigate('/onboarding', { state: { name: data.name } })
   }
 
   return (
@@ -174,10 +183,17 @@ export function Register() {
 
 export function ForgotPassword() {
   const [sent, setSent] = useState(false)
+  const showToast = useAppStore((s) => s.showToast)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ForgotForm>({ resolver: zodResolver(forgotSchema) })
 
   const onSubmit = async (data: ForgotForm) => {
-    if (isSupabaseConfigured && supabase) await supabase.auth.resetPasswordForEmail(data.email, { redirectTo: window.location.origin + '/app/settings' })
+    if (isSupabaseConfigured && supabase) {
+      const { error } = await supabase.auth.resetPasswordForEmail(data.email, { redirectTo: window.location.origin + '/reset-password' })
+      if (error) {
+        showToast('Gagal mengirim instruksi. Coba lagi beberapa saat.', 'error')
+        return
+      }
+    }
     setSent(true)
   }
 
@@ -198,6 +214,78 @@ export function ForgotPassword() {
           <button className="btn btn-primary w-full py-3" disabled={isSubmitting}>Kirim Instruksi <ArrowRight size={16} /></button>
           <p className="text-center text-xs text-muted">Untuk keamanan, kami tidak mengungkapkan apakah email terdaftar atau tidak.</p>
           <p className="text-center text-sm"><Link to="/masuk" className="font-bold text-accent hover:underline">← Kembali ke Masuk</Link></p>
+        </form>
+      )}
+    </AuthLayout>
+  )
+}
+
+export function ResetPassword() {
+  const [checking, setChecking] = useState(true)
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+  const showToast = useAppStore((s) => s.showToast)
+  const signOut = useAppStore((s) => s.signOut)
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ResetForm>({ resolver: zodResolver(resetSchema) })
+
+  useEffect(() => {
+    let active = true
+    const verify = async () => {
+      if (!supabase) {
+        if (active) { setError('Layanan auth belum tersedia.'); setChecking(false) }
+        return
+      }
+      const code = new URLSearchParams(window.location.search).get('code')
+      if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+        if (exchangeError && active) {
+          setError('Tautan pemulihan tidak valid atau sudah kedaluwarsa.')
+          setChecking(false)
+          return
+        }
+      }
+      const { data } = await supabase.auth.getSession()
+      if (active) {
+        setError(data.session ? '' : 'Tautan pemulihan tidak valid atau sudah kedaluwarsa.')
+        setChecking(false)
+      }
+    }
+    void verify()
+    return () => { active = false }
+  }, [])
+
+  const onSubmit = async (data: ResetForm) => {
+    if (!supabase) return
+    const { error: updateError } = await supabase.auth.updateUser({ password: data.password })
+    if (updateError) {
+      showToast('Gagal menyimpan password baru. Coba lagi.', 'error')
+      return
+    }
+    await supabase.auth.signOut({ scope: 'global' })
+    signOut()
+    showToast('Password berhasil diperbarui. Silakan masuk lagi.', 'success')
+    navigate('/masuk', { replace: true })
+  }
+
+  return (
+    <AuthLayout title="Ubah Password" subtitle="Buat password baru untuk akun Nalarinmu">
+      {checking ? (
+        <p className="text-sm text-muted">Memeriksa tautan pemulihan...</p>
+      ) : error ? (
+        <div className="card text-center">
+          <p className="text-sm font-semibold text-danger" role="alert">{error}</p>
+          <Link to="/lupa-password" className="btn btn-primary mt-5">Minta tautan baru</Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <Field label="Password baru" error={errors.password?.message}>
+            <input className="input" type="password" placeholder="Minimal 8 karakter" autoComplete="new-password" {...register('password')} />
+          </Field>
+          <Field label="Konfirmasi password" error={errors.confirm?.message}>
+            <input className="input" type="password" placeholder="Ulangi password baru" autoComplete="new-password" {...register('confirm')} />
+          </Field>
+          <button className="btn btn-primary w-full py-3" disabled={isSubmitting}>Simpan Password</button>
+          <p className="text-center text-xs text-muted">Setelah berhasil, kamu perlu masuk lagi dengan password baru.</p>
         </form>
       )}
     </AuthLayout>

@@ -4,7 +4,7 @@ import { darkenColor, readableTextColor } from '@/lib/utils'
 import type { OnboardingData, ThemeState } from '@/types'
 
 const defaultTheme: ThemeState = {
-  mode: 'system',
+  mode: 'light',
   accent: '#7563E8',
   density: 'comfortable',
   backgroundStyle: 'minimal',
@@ -41,6 +41,8 @@ interface Toast {
 interface AppState {
   theme: ThemeState
   user: AppUser | null
+  /** Email akun terakhir dipakai, tetap ada setelah logout untuk mengenali akun yang sama. */
+  lastAccountEmail: string | null
   onboarding: OnboardingData | null
   completedLessons: string[]
   quizResults: QuizResult[]
@@ -126,6 +128,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       theme: defaultTheme,
       user: null,
+      lastAccountEmail: null,
       onboarding: null,
       completedLessons: [],
       quizResults: [],
@@ -163,11 +166,18 @@ export const useAppStore = create<AppState>()(
       applyTheme: () => applyThemeToDocument(get().theme),
 
       signIn: (email) => {
-        const current = get().user
-        if (current?.email === email) return
-        set({ ...emptyAccountData, user: userFromEmail(email) })
+        const state = get()
+        const sameAccount =
+          state.user?.email === email || state.lastAccountEmail === email
+        if (sameAccount) {
+          // Login ulang ke akun yang sama: progres/onboarding tidak dihapus.
+          set({ user: state.user ?? userFromEmail(email), lastAccountEmail: email })
+          return
+        }
+        // Akun benar-benar berbeda: bersihkan semua data milik akun sebelumnya.
+        set({ ...emptyAccountData, user: userFromEmail(email), lastAccountEmail: email })
       },
-      signOut: () => set({ user: null, ...emptyAccountData }),
+      signOut: () => set({ user: null }),
       updateProfile: (patch) => {
         const user = get().user
         if (user) set({ user: { ...user, ...patch } })
@@ -249,9 +259,23 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'nalarin-store',
+      version: 2,
+      migrate: (persistedState, version) => {
+        const state = persistedState as Partial<AppState>
+        const theme = state.theme
+        const wasUntouchedDefault =
+          theme &&
+          theme.mode === 'system' &&
+          theme.accent.toLowerCase() === defaultTheme.accent.toLowerCase() &&
+          theme.density === defaultTheme.density &&
+          theme.backgroundStyle === defaultTheme.backgroundStyle
+        if (version < 2 && wasUntouchedDefault) state.theme = { ...theme, mode: 'light' }
+        return state as AppState
+      },
       partialize: (state) => ({
         theme: state.theme,
         user: state.user,
+        lastAccountEmail: state.lastAccountEmail,
         onboarding: state.onboarding,
         completedLessons: state.completedLessons,
         quizResults: state.quizResults,

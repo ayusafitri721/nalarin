@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { forgotSchema, loginSchema, registerSchema } from './authValidation'
+import { forgotSchema, loginSchema, registerSchema, resetSchema } from './authValidation'
 
 const validRegister = {
   name: 'Nalarin User',
@@ -79,5 +79,21 @@ describe('forgotSchema', () => {
 
   it('menolak email tidak valid', () => {
     expect(forgotSchema.safeParse({ email: 'salah' }).success).toBe(false)
+  })
+})
+
+describe('resetSchema', () => {
+  it('menerima password baru yang sama', () => {
+    expect(resetSchema.safeParse({ password: 'rahasia123', confirm: 'rahasia123' }).success).toBe(true)
+  })
+
+  it('menolak password kurang dari 8 karakter', () => {
+    expect(resetSchema.safeParse({ password: 'pendek', confirm: 'pendek' }).success).toBe(false)
+  })
+
+  it('menolak konfirmasi yang tidak cocok', () => {
+    const result = resetSchema.safeParse({ password: 'rahasia123', confirm: 'berbeda12' })
+    expect(result.success).toBe(false)
+    if (!result.success) expect(result.error.issues[0].path).toContain('confirm')
   })
 })

@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
 import { Award, BookOpen, Check, Flame, Heart, Lightbulb, Sparkles, Star } from 'lucide-react'
-import { Mascot } from '@/components/Illustrations'
 import { ProgressBar, SectionHeader } from '@/components/ui'
-import { achievements, companions, skillScores, topics, weeklyActivity } from '@/data/content'
+import { achievements, companionAssets, companions, skillScores, topics, weeklyActivity } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
@@ -13,7 +12,7 @@ export function CompanionPage() {
   const updateProfile = useAppStore((s) => s.updateProfile)
   const showToast = useAppStore((s) => s.showToast)
   const [selected, setSelected] = useState(user?.companion ?? 'nori')
-  const [name, setName] = useState(companions.find((c) => c.id === selected)?.name ?? 'Nori')
+  const [name, setName] = useState(companions.find((c) => c.id === selected)?.name ?? 'Mochi')
   const [pose, setPose] = useState<'happy' | 'curious' | 'thinking' | 'celebrating' | 'neutral'>('happy')
   const [accessory, setAccessory] = useState('none')
   const [background, setBackground] = useState('#EEEBFF')
@@ -34,7 +33,7 @@ export function CompanionPage() {
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {companions.map((c) => (
                 <button key={c.id} onClick={() => { setSelected(c.id); setName(c.name) }} className={cn('rounded-2xl border p-3 text-center transition-all', selected === c.id ? 'border-accent bg-accent-soft' : 'border-line hover:border-accent/50')}>
-                  <div className="grid h-20 place-items-center rounded-xl" style={{ background: `${c.color}1A` }}><Mascot id={c.id} size={72} /></div>
+                  <div className="grid h-20 place-items-center rounded-xl" style={{ background: `${c.color}1A` }}><img src={companionAssets[c.id]} alt="" aria-hidden="true" className="h-[72px] w-[72px] object-contain" /></div>
                   <p className="mt-2 font-display text-sm font-extrabold">{c.name}</p>
                   <p className="mt-1 text-[11px] leading-tight text-muted">{c.description}</p>
                 </button>
@@ -78,7 +77,7 @@ export function CompanionPage() {
         <section className="card h-fit lg:sticky lg:top-20">
           <p className="mb-3 text-center text-xs font-bold text-muted">Preview</p>
           <div className="relative grid h-56 place-items-center rounded-2xl" style={{ background }}>
-            <Mascot id={selected} size={150} mood={pose} />
+            <img src={companionAssets[selected]} alt={`Companion ${name}`} className="h-[150px] w-[150px] object-contain drop-shadow-[0_12px_18px_rgba(37,35,58,.18)]" />
             {accessory !== 'none' && <span className="absolute left-1/2 top-[38%] -translate-x-1/2 text-3xl">{accessory}</span>}
           </div>
           <p className="mt-3 text-center font-display text-lg font-extrabold">{name}</p>

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-165 -152 335 305"><defs><radialGradient id="catHead" cx="0.4" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#bfa9ff"/>
+      <stop offset="1" stop-color="#7a5ef0"/>
+    </radialGradient><linearGradient id="catBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a98dff"/>
+      <stop offset="1" stop-color="#6f52e6"/>
+    </linearGradient><filter id="soft2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter></defs>
+  <g transform="translate(0,0) scale(1)">
+    <ellipse cx="0" cy="130" rx="70" ry="10" fill="#5b45c8" opacity="0.25" filter="url(#soft2)"/>
+
+    <!-- tail -->
+    <path d="M-44,98 C-112,112 -128,50 -90,34" stroke="url(#catBody)" stroke-width="20" stroke-linecap="round" fill="none"/>
+    <path d="M-100,38 C-92,32 -88,34 -84,36" stroke="#efe8ff" stroke-width="20" stroke-linecap="round" fill="none"/>
+
+    <!-- body -->
+    <path d="M-50,6 C-64,60 -54,116 0,120 C54,116 64,60 50,6 Z" fill="url(#catBody)"/>
+    <ellipse cx="0" cy="72" rx="30" ry="40" fill="#efe8ff"/>
+    <ellipse cx="-27" cy="124" rx="23" ry="12" fill="#8e72f5"/>
+    <ellipse cx="27" cy="124" rx="23" ry="12" fill="#8e72f5"/>
+    <ellipse cx="-27" cy="127" rx="13" ry="6" fill="#efe8ff"/>
+    <ellipse cx="27" cy="127" rx="13" ry="6" fill="#efe8ff"/>
+
+    <!-- headphone band (behind ears) -->
+    <path d="M-76,-44 C-80,-132 80,-132 76,-44" stroke="#f6f2ff" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+    <!-- ears -->
+    <path d="M-64,-76 L-74,-134 L-24,-102 Z" fill="#7a5ef0" stroke="#7a5ef0" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M64,-76 L74,-134 L24,-102 Z" fill="#7a5ef0" stroke="#7a5ef0" stroke-width="12" stroke-linejoin="round"/>
+    <path d="M-60,-88 L-66,-118 L-38,-102 Z" fill="#ffb3d6" stroke="#ffb3d6" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M60,-88 L66,-118 L38,-102 Z" fill="#ffb3d6" stroke="#ffb3d6" stroke-width="6" stroke-linejoin="round"/>
+
+    <!-- head -->
+    <ellipse cx="0" cy="-40" rx="74" ry="66" fill="url(#catHead)"/>
+    <!-- forehead marks -->
+    <g stroke="#5a3fd0" stroke-width="5" stroke-linecap="round" fill="none">
+      <path d="M0,-100 L0,-86"/>
+      <path d="M-14,-97 L-11,-85"/>
+      <path d="M14,-97 L11,-85"/>
+    </g>
+    <!-- muzzle -->
+    <ellipse cx="0" cy="-20" rx="44" ry="32" fill="#f6f1ff"/>
+    <!-- eyes -->
+    <ellipse cx="-30" cy="-46" rx="12" ry="16" fill="#2a1f5c"/>
+    <ellipse cx="30" cy="-46" rx="12" ry="16" fill="#2a1f5c"/>
+    <circle cx="-26" cy="-52" r="5" fill="#ffffff"/>
+    <circle cx="34" cy="-52" r="5" fill="#ffffff"/>
+    <circle cx="-34" cy="-40" r="2.5" fill="#ffffff"/>
+    <circle cx="26" cy="-40" r="2.5" fill="#ffffff"/>
+    <!-- blush -->
+    <ellipse cx="-52" cy="-24" rx="10" ry="6" fill="#ff9cc6" opacity="0.65"/>
+    <ellipse cx="52" cy="-24" rx="10" ry="6" fill="#ff9cc6" opacity="0.65"/>
+    <!-- nose + mouth -->
+    <path d="M-6,-30 Q0,-24 6,-30 Q0,-36 -6,-30 Z" fill="#ff7fb0"/>
+    <path d="M-14,-20 Q0,0 14,-20 Z" fill="#5a2d6e"/>
+    <ellipse cx="0" cy="-10" rx="6" ry="4" fill="#ff8fb0"/>
+
+    <!-- headphone cups -->
+    <ellipse cx="-78" cy="-40" rx="14" ry="25" fill="#f6f2ff"/>
+    <ellipse cx="-80" cy="-40" rx="8" ry="17" fill="#b9a4ff"/>
+    <ellipse cx="78" cy="-40" rx="14" ry="25" fill="#f6f2ff"/>
+    <ellipse cx="80" cy="-40" rx="8" ry="17" fill="#b9a4ff"/>
+
+    <!-- arms -->
+    <path d="M-46,34 C-62,50 -64,70 -58,84" stroke="#8e72f5" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <circle cx="-58" cy="86" r="12" fill="#f2ecff"/>
+    <path d="M46,30 C74,22 90,4 92,-18" stroke="#8e72f5" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <circle cx="92" cy="-22" r="13" fill="#f2ecff"/>
+    <g stroke="#cdbfff" stroke-width="2" stroke-linecap="round">
+      <path d="M87,-28 L87,-22 M92,-30 L92,-23 M97,-28 L97,-22"/>
+    </g>
+  </g>
+
+  </svg>

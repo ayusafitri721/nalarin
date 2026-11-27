@@ -8,6 +8,7 @@ export const GENERIC_SIGNUP_ERROR = 'Pendaftaran gagal. Silakan coba lagi.'
 export const GENERIC_GOOGLE_ERROR = 'Login Google gagal. Silakan coba lagi.'
 
 const RATE_LIMIT_PATTERN = /rate limit|too many|terlalu banyak|email.*limit|request.*limit/i
+const DUPLICATE_PATTERN = /already registered|already in use|user already exists|email.*taken/i
 
 export function mapLoginError(message: string): string {
   if (RATE_LIMIT_PATTERN.test(message)) return 'Terlalu banyak percobaan. Coba lagi beberapa saat.'
@@ -16,6 +17,7 @@ export function mapLoginError(message: string): string {
 
 export function mapSignupError(message: string): string {
   if (RATE_LIMIT_PATTERN.test(message)) return 'Terlalu banyak percobaan. Coba lagi beberapa saat.'
+  if (DUPLICATE_PATTERN.test(message)) return 'Email ini sudah terdaftar. Masuk dengan Google atau gunakan email lain.'
   return GENERIC_SIGNUP_ERROR
 }
 

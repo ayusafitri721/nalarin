@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 import { ArrowRight, BookOpen, Flame, Target, Trophy, Users, Zap } from 'lucide-react'
-import { Mascot } from '@/components/Illustrations'
 import { CompanionCard, ProgressBar, SectionHeader, StatCard } from '@/components/ui'
-import { quests, topics } from '@/data/content'
+import { companionAssets, quests, topics } from '@/data/content'
 import { useAppStore } from '@/store/useAppStore'
 
 const DAY_LABELS = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
@@ -69,7 +68,7 @@ export default function Dashboard() {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-2xl sm:h-24 sm:w-36" style={{ background: active.topic.soft }}>
                   <div className="absolute inset-0 grid place-items-center text-accent"><BookOpen size={36} /></div>
-                  <Mascot id={companion} size={56} className="absolute -bottom-2 right-1" />
+                  <img src={companionAssets[companion]} alt="" aria-hidden="true" className="absolute -bottom-2 right-1 h-14 w-14 object-contain" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="font-display text-lg font-extrabold">{active.topic.title}</h3>

@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Award, BookOpen, Check, Flame, Pencil, Settings, ShieldCheck, Sparkles, Zap } from 'lucide-react'
-import { Mascot } from '@/components/Illustrations'
 import { Avatar, StatCard } from '@/components/ui'
-import { achievements } from '@/data/content'
+import { achievements, companionAssets } from '@/data/content'
 import { cn, formatNumber } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
@@ -108,7 +107,7 @@ export default function Profile() {
       </div>
 
       <div className="card flex items-center gap-4">
-        <Mascot id={user?.companion ?? 'nori'} size={72} />
+        <img src={companionAssets[user?.companion ?? 'nori']} alt="Companion" className="h-[72px] w-[72px] object-contain" />
         <div><p className="font-display text-sm font-extrabold">Companion kamu</p><p className="text-xs text-muted">Kustomisasi teman belajarmu di halaman Companion.</p></div>
         <Link to="/app/companion" className="btn btn-soft ml-auto !text-xs">Lihat →</Link>
       </div>

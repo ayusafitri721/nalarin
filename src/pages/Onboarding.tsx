@@ -1,25 +1,24 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
-  ArrowLeft, ArrowRight, Atom, BookOpen, Brain, Check, Cpu, Flame, Landmark,
-  Languages, Palette, Puzzle, Sparkles, Target, Wallet,
+  ArrowLeft, ArrowRight, BookOpen, Brain, Check, Flame, Sparkles, Target,
 } from 'lucide-react'
-import { Logo, Mascot } from '@/components/Illustrations'
-import { accentPresets, companions } from '@/data/content'
+import { Logo } from '@/components/Illustrations'
+import { accentPresets, companionAssets, companions } from '@/data/content'
 import { useAppStore } from '@/store/useAppStore'
 import { cn } from '@/lib/utils'
 import type { ThemeState } from '@/types'
 
 const interests = [
-  { id: 'science', label: 'Science', icon: Atom, color: '#5C8DF6' },
-  { id: 'technology', label: 'Teknologi', icon: Cpu, color: '#7C6CF0' },
-  { id: 'psychology', label: 'Psikologi', icon: Brain, color: '#E58AB6' },
-  { id: 'finance', label: 'Finansial', icon: Wallet, color: '#4FB992' },
-  { id: 'history', label: 'Sejarah', icon: Landmark, color: '#D9A25B' },
-  { id: 'creativity', label: 'Kreativitas', icon: Palette, color: '#E5806C' },
-  { id: 'language', label: 'Bahasa', icon: Languages, color: '#59A6C9' },
-  { id: 'logic', label: 'Logika', icon: Puzzle, color: '#8E82E8' },
-  { id: 'general', label: 'Pengetahuan Umum', icon: BookOpen, color: '#8C8AA0' },
+  { id: 'science', label: 'Science', image: 'topic-science', color: '#5C8DF6' },
+  { id: 'technology', label: 'Teknologi', image: 'topic-digital', color: '#7C6CF0' },
+  { id: 'psychology', label: 'Psikologi', image: 'topic-mind', color: '#E58AB6' },
+  { id: 'finance', label: 'Finansial', image: 'topic-digital', color: '#4FB992' },
+  { id: 'history', label: 'Sejarah', image: 'topic-history', color: '#D9A25B' },
+  { id: 'creativity', label: 'Kreativitas', image: 'topic-creative', color: '#E5806C' },
+  { id: 'language', label: 'Bahasa', image: 'topic-creative', color: '#59A6C9' },
+  { id: 'logic', label: 'Logika', image: 'topic-mind', color: '#8E82E8' },
+  { id: 'general', label: 'Pengetahuan Umum', image: 'topic-history', color: '#8C8AA0' },
 ]
 
 const goals = [
@@ -34,6 +33,7 @@ const dailyGoals = [5, 10, 20, 30]
 
 export default function Onboarding() {
   const navigate = useNavigate()
+  const location = useLocation()
   const finishOnboarding = useAppStore((s) => s.finishOnboarding)
   const saved = useAppStore((s) => s.onboarding)
   const setAccent = useAppStore((s) => s.setAccent)
@@ -41,7 +41,8 @@ export default function Onboarding() {
   const theme = useAppStore((s) => s.theme)
 
   const [step, setStep] = useState(1)
-  const [name, setName] = useState(saved?.name ?? '')
+  const registeredName = (location.state as { name?: string } | null)?.name ?? ''
+  const [name, setName] = useState(saved?.name ?? registeredName)
   const [selectedInterests, setSelectedInterests] = useState<string[]>(saved?.interests ?? [])
   const [selectedGoals, setSelectedGoals] = useState<string[]>(saved?.goals ?? [])
   const [dailyGoal, setDailyGoal] = useState(saved?.dailyGoal ?? 10)
@@ -60,6 +61,18 @@ export default function Onboarding() {
 
   const back = () => (step > 1 ? setStep(step - 1) : navigate(-1))
 
+  const skip = () => {
+    finishOnboarding({
+      name: name.trim() || useAppStore.getState().user?.name || 'Learner',
+      interests: selectedInterests,
+      goals: selectedGoals,
+      dailyGoal,
+      companion,
+      theme: accent,
+    })
+    navigate('/app')
+  }
+
   const canContinue =
     step === 1 ? name.trim().length >= 2 :
     step === 2 ? selectedInterests.length > 0 :
@@ -73,10 +86,16 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div
+      className="min-h-screen bg-bg bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/assets/nalarin/onboarding-bg.svg')",
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <header className="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-4">
         <Logo />
-        <button onClick={() => navigate('/masuk')} className="text-sm font-bold text-muted hover:text-accent">Lewati nanti</button>
+        <button onClick={skip} className="text-sm font-bold text-muted hover:text-accent">Lewati</button>
       </header>
 
       <main className="mx-auto max-w-[1100px] px-4 pb-16 pt-4">
@@ -93,7 +112,11 @@ export default function Onboarding() {
 
             {step === 1 && (
               <div className="relative text-center">
-                <Mascot id="nori" size={150} mood="happy" className="mx-auto" />
+                <img
+                  src={companionAssets.nori}
+                  alt="Mochi, teman belajar Nalarin"
+                  className="mx-auto h-[150px] w-[150px] object-contain drop-shadow-[0_12px_18px_rgba(37,35,58,.18)]"
+                />
                 <h1 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">Selamat Datang di Nalarin!</h1>
                 <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">Sebelum mulai, sebutkan nama yang ingin kami panggil.</p>
                 <input className="input mx-auto mt-6 max-w-xs text-center font-display font-bold" placeholder="Nama kamu" value={name} onChange={(e) => setName(e.target.value)} />
@@ -107,12 +130,13 @@ export default function Onboarding() {
                 <p className="mt-2 text-sm text-muted">Pilih minat favoritmu (bisa lebih dari satu).</p>
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {interests.map((it) => {
-                    const Icon = it.icon
                     const active = selectedInterests.includes(it.id)
                     return (
                       <button key={it.id} onClick={() => toggle(selectedInterests, setSelectedInterests, it.id)} className={cn('relative flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition-all', active ? 'border-accent bg-accent-soft shadow-card' : 'border-line bg-surface hover:border-accent/50')} aria-pressed={active}>
                         {active && <span className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full bg-accent text-white"><Check size={12} /></span>}
-                        <span className="grid h-10 w-10 place-items-center rounded-xl" style={{ background: `${it.color}22`, color: it.color }}><Icon size={20} /></span>
+                        <span className="grid h-12 w-14 place-items-center rounded-xl" style={{ background: `${it.color}22` }}>
+                          <img src={`/assets/nalarin/landing/${it.image}.svg`} alt="" aria-hidden="true" className="h-11 w-12 object-contain" />
+                        </span>
                         <span className="font-display text-xs font-bold">{it.label}</span>
                       </button>
                     )
@@ -154,7 +178,7 @@ export default function Onboarding() {
                   ))}
                 </div>
                 <div className="mt-6 flex items-center gap-3 rounded-2xl bg-accent-soft p-4">
-                  <Mascot id="nori" size={64} mood="curious" />
+                  <img src={companionAssets.nori} alt="" aria-hidden="true" className="h-16 w-16 shrink-0 object-contain" />
                   <p className="text-xs leading-relaxed text-muted">Satu langkah kecil tetap berarti. Target ini hanya membantu kamu menjaga ritme.</p>
                 </div>
               </div>
@@ -168,7 +192,7 @@ export default function Onboarding() {
                   {companions.map((c) => (
                     <button key={c.id} onClick={() => setCompanion(c.id)} className={cn('rounded-2xl border p-3 text-center transition-all', companion === c.id ? 'border-accent bg-accent-soft shadow-card' : 'border-line hover:border-accent/50')} aria-pressed={companion === c.id}>
                       <div className="mx-auto grid h-20 w-20 place-items-center rounded-2xl" style={{ background: `${c.color}1A` }}>
-                        <Mascot id={c.id} size={76} mood="happy" />
+                        <img src={companionAssets[c.id]} alt="" aria-hidden="true" className="h-[76px] w-[76px] object-contain" />
                       </div>
                       <p className="mt-2 font-display text-sm font-extrabold">{c.name}</p>
                       <p className="mt-1 text-[11px] leading-snug text-muted">{c.description}</p>
@@ -201,7 +225,7 @@ export default function Onboarding() {
                   <div className="flex items-center gap-3">
                     <span className="btn btn-primary !py-2 !text-xs">Tombol Utama</span>
                     <span className="h-2 flex-1 overflow-hidden rounded-full bg-line"><span className="block h-full w-2/3 rounded-full" style={{ background: accent.accent }} /></span>
-                    <Mascot id={companion} size={44} />
+                    <img src={companionAssets[companion]} alt="" aria-hidden="true" className="h-11 w-11 object-contain" />
                   </div>
                 </div>
               </div>
@@ -209,7 +233,7 @@ export default function Onboarding() {
 
             {step === 7 && (
               <div className="relative text-center">
-                <Mascot id={companion} size={130} mood="celebrating" className="mx-auto" />
+                <img src={companionAssets[companion]} alt="Companion pilihanmu" className="mx-auto h-[130px] w-[130px] object-contain drop-shadow-[0_12px_18px_rgba(37,35,58,.18)]" />
                 <h1 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">Semua siap, {name || 'Learner'}!</h1>
                 <p className="mt-2 text-sm text-muted">Ini ringkasan pilihanmu. Kamu bisa mengubahnya kapan saja.</p>
                 <div className="mt-6 grid gap-2 text-left sm:grid-cols-2">
@@ -217,7 +241,7 @@ export default function Onboarding() {
                     ['Minat', selectedInterests.map((i) => interests.find((x) => x.id === i)?.label).join(', ')],
                     ['Tujuan', `${selectedGoals.length} tujuan dipilih`],
                     ['Target harian', `${dailyGoal} menit`],
-                    ['Companion', companions.find((c) => c.id === companion)?.name ?? 'Nori'],
+                    ['Companion', companions.find((c) => c.id === companion)?.name ?? 'Mochi'],
                   ].map(([label, value]) => (
                     <div key={label} className="rounded-xl bg-accent-soft p-3">
                       <p className="text-[11px] font-bold uppercase tracking-wide text-muted">{label}</p>

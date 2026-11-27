@@ -10,6 +10,7 @@ import Landing from '@/pages/Landing'
 const Login = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.Login })))
 const Register = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.Register })))
 const ForgotPassword = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.ForgotPassword })))
+const ResetPassword = lazy(() => import('@/pages/Auth').then((m) => ({ default: m.ResetPassword })))
 const Onboarding = lazy(() => import('@/pages/Onboarding'))
 const Dashboard = lazy(() => import('@/pages/Dashboard'))
 const Explore = lazy(() => import('@/pages/Explore'))
@@ -54,6 +55,12 @@ function GuestRoute() {
   return user ? <Navigate to="/app" replace /> : <Outlet />
 }
 
+/** User baru wajib menyelesaikan onboarding sebelum masuk dashboard. */
+function RequireOnboarding() {
+  const onboarding = useAppStore((s) => s.onboarding)
+  return onboarding ? <Outlet /> : <Navigate to="/onboarding" replace />
+}
+
 function Verification() {
   return (
     <div className="grid min-h-screen place-items-center bg-bg px-4">
@@ -92,6 +99,7 @@ export default function App() {
         <Route path="/masuk" element={<Login />} />
         <Route path="/daftar" element={<Register />} />
         <Route path="/lupa-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verifikasi-email" element={<Verification />} />
       </Route>
       <Route path="/privasi" element={<Legal type="privacy" />} />
@@ -99,39 +107,41 @@ export default function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/onboarding" element={<Onboarding />} />
-        <Route element={<AppShell />}>
-          <Route path="/app" element={<Dashboard />} />
-          <Route path="/app/explore" element={<Explore />} />
-          <Route path="/app/universe/:slug" element={<UniverseDetail />} />
-          <Route path="/app/topic/:slug" element={<TopicDetail />} />
-          <Route path="/app/learn/:lessonId" element={<Learning />} />
-          <Route path="/app/quiz/:quizId" element={<QuizPage />} />
-          <Route path="/app/quiz/:quizId/result" element={<QuizResultPage />} />
-          <Route path="/app/journey" element={<Journey />} />
-          <Route path="/app/games" element={<Games />} />
-          <Route path="/app/games/:slug" element={<GamePlay />} />
-          <Route path="/app/quest" element={<Quest />} />
-          <Route path="/app/streak" element={<StreakPage />} />
-          <Route path="/app/achievements" element={<Achievements />} />
-          <Route path="/app/rewards" element={<Achievements />} />
-          <Route path="/app/friends" element={<Friends />} />
-          <Route path="/app/friends/:username" element={<FriendProfile />} />
-          <Route path="/app/messages" element={<Messages />} />
-          <Route path="/app/messages/:conversationId" element={<Messages />} />
-          <Route path="/app/study-rooms" element={<StudyRooms />} />
-          <Route path="/app/duel" element={<Duel />} />
-          <Route path="/app/leaderboard" element={<Leaderboard />} />
-          <Route path="/app/companion" element={<CompanionPage />} />
-          <Route path="/app/skill-passport" element={<SkillPassport />} />
-          <Route path="/app/profile" element={<Profile />} />
-          <Route path="/app/personalization" element={<Personalization />} />
-          <Route path="/app/settings" element={<Settings />} />
-          <Route path="/app/notifications" element={<Notifications />} />
-          <Route path="/app/search" element={<SearchPage />} />
-          <Route path="/app/curiosity" element={<Curiosity />} />
-          <Route path="/app/wrapped" element={<Wrapped />} />
-          <Route path="/app/help" element={<Help />} />
-          <Route path="/app/*" element={<EmptyState title="Halaman tidak ditemukan" description="Halaman yang kamu cari tidak tersedia." action={<Link className="btn btn-primary" to="/app">Kembali ke Home</Link>} />} />
+        <Route element={<RequireOnboarding />}>
+          <Route element={<AppShell />}>
+            <Route path="/app" element={<Dashboard />} />
+            <Route path="/app/explore" element={<Explore />} />
+            <Route path="/app/universe/:slug" element={<UniverseDetail />} />
+            <Route path="/app/topic/:slug" element={<TopicDetail />} />
+            <Route path="/app/learn/:lessonId" element={<Learning />} />
+            <Route path="/app/quiz/:quizId" element={<QuizPage />} />
+            <Route path="/app/quiz/:quizId/result" element={<QuizResultPage />} />
+            <Route path="/app/journey" element={<Journey />} />
+            <Route path="/app/games" element={<Games />} />
+            <Route path="/app/games/:slug" element={<GamePlay />} />
+            <Route path="/app/quest" element={<Quest />} />
+            <Route path="/app/streak" element={<StreakPage />} />
+            <Route path="/app/achievements" element={<Achievements />} />
+            <Route path="/app/rewards" element={<Achievements />} />
+            <Route path="/app/friends" element={<Friends />} />
+            <Route path="/app/friends/:username" element={<FriendProfile />} />
+            <Route path="/app/messages" element={<Messages />} />
+            <Route path="/app/messages/:conversationId" element={<Messages />} />
+            <Route path="/app/study-rooms" element={<StudyRooms />} />
+            <Route path="/app/duel" element={<Duel />} />
+            <Route path="/app/leaderboard" element={<Leaderboard />} />
+            <Route path="/app/companion" element={<CompanionPage />} />
+            <Route path="/app/skill-passport" element={<SkillPassport />} />
+            <Route path="/app/profile" element={<Profile />} />
+            <Route path="/app/personalization" element={<Personalization />} />
+            <Route path="/app/settings" element={<Settings />} />
+            <Route path="/app/notifications" element={<Notifications />} />
+            <Route path="/app/search" element={<SearchPage />} />
+            <Route path="/app/curiosity" element={<Curiosity />} />
+            <Route path="/app/wrapped" element={<Wrapped />} />
+            <Route path="/app/help" element={<Help />} />
+            <Route path="/app/*" element={<EmptyState title="Halaman tidak ditemukan" description="Halaman yang kamu cari tidak tersedia." action={<Link className="btn btn-primary" to="/app">Kembali ke Home</Link>} />} />
+          </Route>
         </Route>
       </Route>
 

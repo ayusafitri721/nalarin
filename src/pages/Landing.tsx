@@ -162,7 +162,7 @@ export default function Landing() {
             alt="Knowledge Universe: pulau apung dengan kastil, awan, planet, mascot astronaut, dan ponsel Nalarin"
             className="block aspect-[9/4] h-[600px] w-full object-cover object-[72%_center] md:h-auto md:object-fill"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F6F2FF]/95 via-[#F6F2FF]/75 to-[#F6F2FF]/10 md:bg-transparent" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F6F2FF]/95 via-[#F6F2FF]/75 to-[#F6F2FF]/10 md:bg-none" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center px-6 md:px-12 lg:px-20">
             <div className="min-w-0 max-w-md">
               <h1 className="font-display text-[30px] font-extrabold leading-[1.06] tracking-tight text-[#25233A] sm:text-[40px] md:text-[48px]">
