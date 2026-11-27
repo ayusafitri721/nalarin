@@ -7,10 +7,14 @@ import { topics, universes } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
+type TrackFilter = 'Semua' | (typeof universes)[number]['track']
+
 export default function Explore() {
   const [query, setQuery] = useState('')
   const [difficulty, setDifficulty] = useState('Semua')
   const [status, setStatus] = useState('Semua')
+  const [track, setTrack] = useState<TrackFilter>('Semua')
+  const [grade, setGrade] = useState('Semua')
   const [showFilters, setShowFilters] = useState(false)
   const completed = useAppStore((s) => s.completedLessons)
   const quizResults = useAppStore((s) => s.quizResults)
@@ -31,8 +35,18 @@ export default function Explore() {
     const matchQuery = t.title.toLowerCase().includes(query.toLowerCase()) || t.description.toLowerCase().includes(query.toLowerCase())
     const matchDifficulty = difficulty === 'Semua' || t.difficulty === difficulty
     const matchStatus = status === 'Semua' || statusOf(t) === status
-    return matchQuery && matchDifficulty && matchStatus
+    const matchTrack = track === 'Semua' || t.track === track
+    const matchGrade = grade === 'Semua' || t.grade === Number(grade)
+    return matchQuery && matchDifficulty && matchStatus && matchTrack && matchGrade
   })
+
+  const gradeOptions = track === 'sd'
+    ? [1, 2, 3, 4, 5, 6]
+    : track === 'smp'
+      ? [7, 8, 9]
+      : track === 'sma'
+        ? [10, 11, 12]
+        : []
 
   return (
     <div className="space-y-7">
@@ -57,6 +71,25 @@ export default function Explore() {
 
         {showFilters && (
           <div className="card mt-3 flex flex-wrap gap-4">
+            <div>
+              <p className="mb-2 text-xs font-bold text-muted">Jalur belajar</p>
+              <div className="flex flex-wrap gap-1.5">
+                <button onClick={() => { setTrack('Semua'); setGrade('Semua') }} className={cn('rounded-full px-3 py-1.5 text-xs font-bold', track === 'Semua' ? 'bg-accent text-white' : 'bg-accent-soft text-accent')}>Semua</button>
+                {universes.map((u) => (
+                  <button key={u.track} onClick={() => { setTrack(u.track); setGrade('Semua') }} className={cn('rounded-full px-3 py-1.5 text-xs font-bold', track === u.track ? 'bg-accent text-white' : 'bg-accent-soft text-accent')}>{u.title}</button>
+                ))}
+              </div>
+            </div>
+            {gradeOptions.length > 0 && (
+              <div>
+                <p className="mb-2 text-xs font-bold text-muted">Kelas</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {gradeOptions.map((g) => (
+                    <button key={g} onClick={() => setGrade(String(g))} className={cn('rounded-full px-3 py-1.5 text-xs font-bold', grade === String(g) ? 'bg-accent text-white' : 'bg-accent-soft text-accent')}>Kelas {g}</button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               <p className="mb-2 text-xs font-bold text-muted">Tingkat kesulitan</p>
               <div className="flex flex-wrap gap-1.5">
@@ -92,14 +125,14 @@ export default function Explore() {
       <section>
         <SectionHeader title="Direkomendasikan untukmu" subtitle={`${filtered.length} topik ditemukan`} />
         {filtered.length === 0 ? (
-          <EmptyState icon={<Filter size={24} />} title="Tidak ada hasil" description="Coba ubah kata kunci atau filter pencarianmu." action={<button className="btn btn-primary" onClick={() => { setQuery(''); setDifficulty('Semua'); setStatus('Semua') }}>Reset filter</button>} />
+          <EmptyState icon={<Filter size={24} />} title="Tidak ada hasil" description="Coba ubah kata kunci atau filter pencarianmu." action={<button className="btn btn-primary" onClick={() => { setQuery(''); setDifficulty('Semua'); setStatus('Semua'); setTrack('Semua'); setGrade('Semua') }}>Reset filter</button>} />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((t) => (
               <Link key={t.id} to={`/app/topic/${t.slug}`} className="card group overflow-hidden !p-0 transition-all hover:-translate-y-1 hover:shadow-hover">
                 <div className="relative h-28 overflow-hidden" style={{ background: t.soft }}>
                   <UniverseArt art={t.art} accent={t.accent} soft={t.soft} label={t.title} />
-                  <span className="absolute left-3 top-3 rounded-full bg-surface/85 px-2.5 py-1 text-[10px] font-bold text-ink">{t.difficulty}</span>
+                  <span className="absolute left-3 top-3 rounded-full bg-surface/85 px-2.5 py-1 text-[10px] font-bold text-ink">{t.grade ? `Kelas ${t.grade}` : universes.find((u) => u.track === t.track)?.title ?? t.difficulty}</span>
                 </div>
                 <div className="p-4">
                   <h3 className="font-display text-sm font-extrabold leading-snug">{t.title}</h3>

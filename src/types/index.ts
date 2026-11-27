@@ -30,6 +30,8 @@ export interface OnboardingData {
   theme: ThemeState
 }
 
+export type LearningTrack = 'tk' | 'sd' | 'smp' | 'sma' | 'snbt' | 'skd' | 'tka' | 'teknologi'
+
 export interface Universe {
   id: string
   slug: string
@@ -40,6 +42,7 @@ export interface Universe {
   icon: string
   art: 'castle' | 'island' | 'brain' | 'city' | 'vault' | 'studio' | 'sphere' | 'arena'
   subcategories: string[]
+  track: LearningTrack
 }
 
 export interface ContentBlock {
@@ -70,6 +73,8 @@ export interface Topic {
   art: Universe['art']
   accent: string
   soft: string
+  track: LearningTrack
+  grade?: number
 }
 
 export interface QuizOption {

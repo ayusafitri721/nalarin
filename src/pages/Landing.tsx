@@ -35,11 +35,14 @@ const features = [
 ]
 
 const universeImages: Record<string, string> = {
-  'Science Lab': 'topic-science',
-  'Digital World': 'topic-digital',
-  'Mind Space': 'topic-mind',
-  'History Vault': 'topic-history',
-  'Creative Studio': 'topic-creative',
+  TK: 'topic-creative',
+  SD: 'topic-science',
+  SMP: 'topic-science',
+  SMA: 'topic-mind',
+  SNBT: 'topic-history',
+  SKD: 'topic-history',
+  TKA: 'topic-digital',
+  Teknologi: 'topic-digital',
 }
 
 const featuredUniverses = universeCatalog
@@ -207,7 +210,7 @@ export default function Landing() {
               Jelajahi Semua <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {featuredUniverses.map((universe) => (
               <button
                 key={universe.id}

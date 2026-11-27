@@ -1,76 +1,64 @@
-import type { Achievement, ContentBlock, Game, Quest, Quiz, Topic, Universe } from '@/types'
+import type { Achievement, Game, Quest, Quiz, Topic, Universe } from '@/types'
+import { examQuiz, lessonContent, questionContent } from './topicContent'
 
 export const universes: Universe[] = [
   {
-    id: 'u1', slug: 'science-lab', title: 'Science Lab', accent: '#5C8DF6', soft: '#E9F0FF',
-    description: 'Jelajahi sains dan fenomena alam, dari tubuh manusia hingga luar angkasa.',
+    id: 'u1', slug: 'tk', title: 'TK', accent: '#E58AB6', soft: '#FDECF4',
+    description: 'Belajar untuk usia 4-6 tahun melalui tema yang dekat dengan keseharian.',
+    icon: 'Sparkles', art: 'studio',
+    subcategories: ['Warna & Bentuk', 'Angka & Huruf', 'Hewan & Tumbuhan', 'Cerita Singkat'],
+    track: 'tk',
+  },
+  {
+    id: 'u2', slug: 'sd', title: 'SD', accent: '#4FB992', soft: '#E6F7F0',
+    description: 'Materi dasar untuk kelas 1 sampai 6 dengan bahasa yang mudah diikuti.',
+    icon: 'BookOpen', art: 'island',
+    subcategories: ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'],
+    track: 'sd',
+  },
+  {
+    id: 'u3', slug: 'smp', title: 'SMP', accent: '#5C8DF6', soft: '#E9F0FF',
+    description: 'Materi kelas 7 sampai 9 untuk mata pelajaran utama.',
     icon: 'FlaskConical', art: 'castle',
-    subcategories: ['Human Body', 'Space', 'Physics', 'Chemistry'],
+    subcategories: ['Kelas 7', 'Kelas 8', 'Kelas 9'],
+    track: 'smp',
   },
   {
-    id: 'u2', slug: 'digital-world', title: 'Digital World', accent: '#7C6CF0', soft: '#EFECFF',
-    description: 'Pahami teknologi, internet, AI, dan cara tetap aman di dunia digital.',
-    icon: 'Cpu', art: 'island',
+    id: 'u4', slug: 'sma', title: 'SMA', accent: '#7C6CF0', soft: '#EFECFF',
+    description: 'Materi kelas 10 sampai 12 sebagai dasar sebelum ujian masuk perguruan tinggi.',
+    icon: 'GraduationCap', art: 'brain',
+    subcategories: ['Kelas 10', 'Kelas 11', 'Kelas 12'],
+    track: 'sma',
+  },
+  {
+    id: 'u5', slug: 'snbt', title: 'SNBT', accent: '#3F7FD6', soft: '#E9F0FF',
+    description: 'Latihan 7 subtes resmi UTBK-SNBT: Tes Potensi Skolastik dan Tes Literasi.',
+    icon: 'GraduationCap', art: 'castle',
+    subcategories: ['Penalaran Umum', 'Pengetahuan dan Pemahaman Umum', 'Pemahaman Bacaan dan Menulis', 'Pengetahuan Kuantitatif', 'Literasi Bahasa Indonesia', 'Literasi Bahasa Inggris', 'Penalaran Matematika'],
+    track: 'snbt',
+  },
+  {
+    id: 'u6', slug: 'skd', title: 'SKD', accent: '#3FA380', soft: '#E6F7F0',
+    description: 'Persiapan Seleksi Kompetensi Dasar sesuai kisi-kisi BKN: TWK, TIU, dan TKP.',
+    icon: 'ClipboardCheck', art: 'city',
+    subcategories: ['Tes Wawasan Kebangsaan', 'Tes Intelegensia Umum', 'Tes Karakteristik Pribadi'],
+    track: 'skd',
+  },
+  {
+    id: 'u7', slug: 'tka', title: 'TKA', accent: '#D9A25B', soft: '#FFF3E3',
+    description: 'Latihan Tes Kemampuan Akademik sesuai mapel wajib dan pilihan Kemdikdasmen.',
+    icon: 'BadgeCheck', art: 'vault',
+    subcategories: ['Bahasa Indonesia', 'Matematika', 'Bahasa Inggris', 'Fisika', 'Biologi'],
+    track: 'tka',
+  },
+  {
+    id: 'u8', slug: 'teknologi', title: 'Teknologi', accent: '#59A6C9', soft: '#E6F5FB',
+    description: 'Pahami internet, kecerdasan buatan, keamanan digital, dan dasar komputasi.',
+    icon: 'Cpu', art: 'sphere',
     subcategories: ['Internet', 'Artificial Intelligence', 'Cyber Safety', 'Computing'],
-  },
-  {
-    id: 'u3', slug: 'mind-space', title: 'Mind Space', accent: '#E58AB6', soft: '#FDECF4',
-    description: 'Kenali pikiran, emosi, memori, dan kebiasaan yang membentuk diri kita.',
-    icon: 'Brain', art: 'brain',
-    subcategories: ['Memory', 'Emotion', 'Habits', 'Communication'],
-  },
-  {
-    id: 'u4', slug: 'financial-district', title: 'Financial District', accent: '#4FB992', soft: '#E6F7F0',
-    description: 'Belajar mengelola uang, menabung, dan memahami ekonomi sehari-hari.',
-    icon: 'Landmark', art: 'city',
-    subcategories: ['Budgeting', 'Saving', 'Economy', 'Business Basics'],
-  },
-  {
-    id: 'u5', slug: 'history-vault', title: 'History Vault', accent: '#D9A25B', soft: '#FFF3E3',
-    description: 'Perjalanan melintasi peradaban dan peristiwa yang membentuk dunia.',
-    icon: 'Landmark', art: 'vault',
-    subcategories: ['Ancient Civilizations', 'World History', 'Local History'],
-  },
-  {
-    id: 'u6', slug: 'creative-studio', title: 'Creative Studio', accent: '#E5806C', soft: '#FFEDE8',
-    description: 'Temukan cara baru berpikir, berkarya, dan bercerita.',
-    icon: 'Palette', art: 'studio',
-    subcategories: ['Design', 'Music', 'Storytelling', 'Creative Thinking'],
-  },
-  {
-    id: 'u7', slug: 'language-sphere', title: 'Language Sphere', accent: '#59A6C9', soft: '#E6F5FB',
-    description: 'Perluas kosakata, tata bahasa, dan kemampuan berkomunikasi.',
-    icon: 'Languages', art: 'sphere',
-    subcategories: ['Vocabulary', 'Grammar', 'Writing', 'Public Speaking'],
-  },
-  {
-    id: 'u8', slug: 'logic-arena', title: 'Logic Arena', accent: '#8E82E8', soft: '#EFEDFF',
-    description: 'Latih penalaran, pola, dan pemecahan masalah dengan tantangan logika.',
-    icon: 'Puzzle', art: 'arena',
-    subcategories: ['Reasoning', 'Patterns', 'Puzzles', 'Problem Solving'],
+    track: 'teknologi',
   },
 ]
-
-function blocks(title: string, sub: string): ContentBlock[] {
-  return [
-    { type: 'paragraph', text: `Pernahkah kamu bertanya-tanya tentang ${title.toLowerCase()}? Dalam pelajaran ini kita akan memahami ${sub.toLowerCase()} langkah demi langkah dengan contoh yang dekat dengan kehidupan sehari-hari.` },
-    { type: 'heading', text: 'Mengapa ini penting?' },
-    { type: 'paragraph', text: `Memahami ${title.toLowerCase()} membantu kamu melihat hubungan antara fakta dan keputusan yang kamu ambil. Pengetahuan ini bukan sekadar hafalan, melainkan cara berpikir yang bisa dipakai di banyak situasi.` },
-    { type: 'callout', text: 'Tips belajar: coba jelaskan kembali materi ini dengan bahasamu sendiri sebelum lanjut ke bagian berikutnya.' },
-    { type: 'heading', text: 'Poin penting' },
-    { type: 'list', items: [`${title} memiliki prinsip dasar yang bisa diamati`, `Contoh sederhana membantu memahami konsep abstrak`, `Latihan kecil lebih efektif daripada membaca berulang kali`], text: '' },
-    { type: 'quote', text: 'Rasa ingin tahu adalah awal dari setiap penemuan.' },
-    { type: 'summary', text: `Ringkasnya, ${title.toLowerCase()} dapat dipahami melalui observasi, contoh, dan latihan. Lanjutkan ke kuis untuk menguji pemahamanmu.` },
-  ]
-}
-
-function makeLessons(title: string, sub: string): Topic['lessons'] {
-  return [
-    { id: `${title}-1`, title: 'Pengenalan', duration: 6, blocks: blocks(title, sub) },
-    { id: `${title}-2`, title: 'Konsep Utama', duration: 8, blocks: blocks(title, `prinsip utama ${sub}`) },
-    { id: `${title}-3`, title: 'Contoh & Penerapan', duration: 7, blocks: blocks(title, `penerapan ${sub}`) },
-  ]
-}
 
 interface TopicSeed {
   slug: string
@@ -83,56 +71,208 @@ interface TopicSeed {
   art: Universe['art']
   accent: string
   soft: string
+  track: Topic['track']
+  grade?: number
 }
 
 const topicSeeds: TopicSeed[] = [
   {
-    slug: 'internet-works', universeSlug: 'digital-world', title: 'Bagaimana Internet Bekerja',
+    slug: 'tk-warna-bentuk', universeSlug: 'tk', title: 'Warna dan Bentuk',
+    description: 'Kenali warna dan bentuk lewat contoh benda di sekitar anak.',
+    difficulty: 'Pemula', duration: 8, objectives: ['Menyebutkan warna dasar', 'Mengenali bentuk lingkaran, kotak, dan segitiga', 'Mencocokkan benda dengan warnanya'],
+    art: 'studio', accent: '#E58AB6', soft: '#FDECF4', track: 'tk',
+  },
+  {
+    slug: 'tk-angka-huruf', universeSlug: 'tk', title: 'Angka dan Huruf',
+    description: 'Mulai mengenal angka 1 sampai 10 dan huruf awal nama benda.',
+    difficulty: 'Pemula', duration: 8, objectives: ['Menyebut angka satu sampai sepuluh', 'Mengenali huruf awal nama benda', 'Meniru bentuk huruf sederhana'],
+    art: 'island', accent: '#E58AB6', soft: '#FDECF4', track: 'tk',
+  },
+  {
+    slug: 'tk-hewan-tumbuhan', universeSlug: 'tk', title: 'Hewan dan Tumbuhan',
+    description: 'Kenali hewan dan tumbuhan yang dekat dengan keseharian anak.',
+    difficulty: 'Pemula', duration: 9, objectives: ['Menyebut nama hewan umum', 'Mengenali bagian tumbuhan', 'Membedakan hewan dan tumbuhan'],
+    art: 'brain', accent: '#E58AB6', soft: '#FDECF4', track: 'tk',
+  },
+  {
+    slug: 'sd-1-berhitung', universeSlug: 'sd', title: 'Berhitung Kelas 1',
+    description: 'Belajar menghitung sampai 20 dengan benda di sekitar.',
+    difficulty: 'Pemula', duration: 10, objectives: ['Menghitung benda sampai dua puluh', 'Menulis angka satu sampai dua puluh', 'Menjumlahkan bilangan kecil'],
+    art: 'island', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 1,
+  },
+  {
+    slug: 'sd-2-membaca', universeSlug: 'sd', title: 'Membaca Kelas 2',
+    description: 'Latih membaca kalimat pendek dan memahami isinya.',
+    difficulty: 'Pemula', duration: 12, objectives: ['Membaca kalimat pendek dengan lancar', 'Menemukan kata kunci dalam kalimat', 'Menyebutkan isi kalimat dengan bahasa sendiri'],
+    art: 'castle', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 2,
+  },
+  {
+    slug: 'sd-3-alam', universeSlug: 'sd', title: 'Mengenal Alam Kelas 3',
+    description: 'Belajar cuaca, musim, dan bagian tubuh makhluk hidup.',
+    difficulty: 'Pemula', duration: 12, objectives: ['Mengenali jenis cuaca', 'Menyebut bagian tubuh hewan', 'Memahami kebutuhan tumbuhan'],
+    art: 'brain', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 3,
+  },
+  {
+    slug: 'sd-4-operasi', universeSlug: 'sd', title: 'Operasi Hitung Kelas 4',
+    description: 'Latih penjumlahan, pengurangan, perkalian, dan pembagian.',
+    difficulty: 'Menengah', duration: 14, objectives: ['Menjumlahkan dan mengurangkan bilangan', 'Menghitung perkalian dasar', 'Membagi bilangan dengan tepat'],
+    art: 'city', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 4,
+  },
+  {
+    slug: 'sd-5-lingkungan', universeSlug: 'sd', title: 'Lingkungan Kelas 5',
+    description: 'Kenali keragaman budaya dan lingkungan di Indonesia.',
+    difficulty: 'Menengah', duration: 14, objectives: ['Menyebutkan contoh keragaman budaya', 'Memahami hubungan manusia dan lingkungan', 'Menjaga kebersihan lingkungan'],
+    art: 'vault', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 5,
+  },
+  {
+    slug: 'sd-6-pecahan', universeSlug: 'sd', title: 'Pecahan Kelas 6',
+    description: 'Pahami pecahan sederhana dan penggunaannya sehari-hari.',
+    difficulty: 'Menengah', duration: 15, objectives: ['Mengenali pecahan biasa', 'Membandingkan dua pecahan', 'Menghitung pecahan dari jumlah benda'],
+    art: 'arena', accent: '#4FB992', soft: '#E6F7F0', track: 'sd', grade: 6,
+  },
+  {
+    slug: 'smp-7-matematika', universeSlug: 'smp', title: 'Matematika Kelas 7',
+    description: 'Dasar bilangan, aljabar, dan pengukuran untuk SMP.',
+    difficulty: 'Menengah', duration: 18, objectives: ['Memahami bilangan bulat dan rasional', 'Menyederhanakan bentuk aljabar', 'Menghitung luas dan volume sederhana'],
+    art: 'city', accent: '#5C8DF6', soft: '#E9F0FF', track: 'smp', grade: 7,
+  },
+  {
+    slug: 'smp-8-ipa', universeSlug: 'smp', title: 'IPA Kelas 8',
+    description: 'Sistem tubuh, energi, dan makhluk hidup.',
+    difficulty: 'Menengah', duration: 20, objectives: ['Menyebut sistem organ utama', 'Memahami perpindahan energi', 'Mengenal klasifikasi makhluk hidup'],
+    art: 'castle', accent: '#5C8DF6', soft: '#E9F0FF', track: 'smp', grade: 8,
+  },
+  {
+    slug: 'smp-9-ips', universeSlug: 'smp', title: 'IPS Kelas 9',
+    description: 'Sejarah, geografi, dan ekonomi dasar.',
+    difficulty: 'Menengah', duration: 18, objectives: ['Membaca linimasa sejarah', 'Memahami letak wilayah Indonesia', 'Menjelaskan kegiatan ekonomi dasar'],
+    art: 'vault', accent: '#5C8DF6', soft: '#E9F0FF', track: 'smp', grade: 9,
+  },
+  {
+    slug: 'sma-10-matematika', universeSlug: 'sma', title: 'Matematika Kelas 10',
+    description: 'Fungsi, persamaan, dan logika matematika.',
+    difficulty: 'Menengah', duration: 22, objectives: ['Memahami konsep fungsi', 'Menyelesaikan persamaan linear', 'Menggunakan logika matematika'],
+    art: 'city', accent: '#7C6CF0', soft: '#EFECFF', track: 'sma', grade: 10,
+  },
+  {
+    slug: 'sma-11-fisika', universeSlug: 'sma', title: 'Fisika Kelas 11',
+    description: 'Gerak, gaya, energi, dan gelombang.',
+    difficulty: 'Menengah', duration: 24, objectives: ['Menganalisis gerak lurus', 'Memahami hukum Newton', 'Menjelaskan sifat gelombang'],
+    art: 'castle', accent: '#7C6CF0', soft: '#EFECFF', track: 'sma', grade: 11,
+  },
+  {
+    slug: 'sma-12-literasi', universeSlug: 'sma', title: 'Literasi Kelas 12',
+    description: 'Membaca kritis, menyimpulkan, dan menyusun argumen.',
+    difficulty: 'Menengah', duration: 20, objectives: ['Menemukan argumen utama teks', 'Membedakan fakta dan opini', 'Menyusun simpulan yang logis'],
+    art: 'brain', accent: '#7C6CF0', soft: '#EFECFF', track: 'sma', grade: 12,
+  },
+  {
+    slug: 'snbt-penalaran-umum', universeSlug: 'snbt', title: 'Penalaran Umum',
+    description: 'Subtes TPS UTBK: penalaran induktif, deduktif, dan kuantitatif.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Menemukan prinsip dari rangkaian fakta', 'Menarik kesimpulan dari premis yang diberikan', 'Bernalar menggunakan hubungan angka sederhana'],
+    art: 'arena', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-pengetahuan-umum', universeSlug: 'snbt', title: 'Pengetahuan dan Pemahaman Umum',
+    description: 'Subtes TPS UTBK: leksikal, informasi, dan konteks sosial budaya Indonesia.',
+    difficulty: 'Menengah', duration: 15, objectives: ['Menafsirkan kata dan frasa sesuai konteks', 'Menghubungkan informasi dalam bacaan pendek', 'Menyimpulkan makna dari bacaan panjang'],
+    art: 'castle', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-pemahaman-bacaan', universeSlug: 'snbt', title: 'Pemahaman Bacaan dan Menulis',
+    description: 'Subtes TPS UTBK: pemilihan, penataan, dan perbaikan gagasan.',
+    difficulty: 'Menengah', duration: 25, objectives: ['Menentukan judul dan diksi yang tepat', 'Mengurutkan kalimat menjadi paragraf yang padu', 'Memperbaiki kalimat mubazir dan tidak baku'],
+    art: 'vault', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-pengetahuan-kuantitatif', universeSlug: 'snbt', title: 'Pengetahuan Kuantitatif',
+    description: 'Subtes TPS UTBK: bilangan, aljabar, geometri, analisis data, dan peluang.',
+    difficulty: 'Menengah', duration: 20, objectives: ['Memecahkan soal bilangan dan aljabar', 'Menghitung besaran geometri dan pengukuran', 'Menafsirkan data dan peluang'],
+    art: 'city', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-literasi-indonesia', universeSlug: 'snbt', title: 'Literasi dalam Bahasa Indonesia',
+    description: 'Subtes literasi UTBK dengan teks konteks saintek, sosial humaniora, dan personal.',
+    difficulty: 'Menengah', duration: 42, objectives: ['Menemukan informasi dalam teks ilmiah dan sosial', 'Menilai argumen dan kepercayaan penulis', 'Merefleksikan isi teks sastra dan informasi'],
+    art: 'sphere', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-literasi-inggris', universeSlug: 'snbt', title: 'Literasi dalam Bahasa Inggris',
+    description: 'Subtes literasi UTBK berbasis teks berbahasa Inggris.',
+    difficulty: 'Menengah', duration: 20, objectives: ['Memahami gagasan utama teks Inggris', 'Mengidentifikasi informasi tersirat', 'Menilai tujuan dan nada penulis'],
+    art: 'island', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'snbt-penalaran-matematika', universeSlug: 'snbt', title: 'Penalaran Matematika',
+    description: 'Subtes literasi UTBK: merumuskan, menggunakan, dan mengevaluasi model matematika.',
+    difficulty: 'Menengah', duration: 42, objectives: ['Mengubah masalah nyata ke model matematika', 'Menerapkan strategi pemecahan masalah', 'Menilai kewajaran hasil dalam konteks asal'],
+    art: 'brain', accent: '#3F7FD6', soft: '#E9F0FF', track: 'snbt',
+  },
+  {
+    slug: 'skd-twk', universeSlug: 'skd', title: 'Tes Wawasan Kebangsaan',
+    description: 'TWK SKD: nasionalisme, integritas, bela negara, empat konsensus, dan Bahasa Indonesia.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Menghayati nilai nasionalisme dan integritas', 'Memahami Pancasila, UUD 1945, NKRI, dan Bhinneka Tunggal Ika', 'Menggunakan Bahasa Indonesia secara tepat'],
+    art: 'vault', accent: '#3FA380', soft: '#E6F7F0', track: 'skd',
+  },
+  {
+    slug: 'skd-tiu', universeSlug: 'skd', title: 'Tes Intelegensia Umum',
+    description: 'TIU SKD: kemampuan verbal, numerik, dan figural.',
+    difficulty: 'Menengah', duration: 35, objectives: ['Menyusun silogisme dan penalaran induktif', 'Menghitung deret angka dan perbandingan kuantitatif', 'Menganalisis pola dan penalaran matriks'],
+    art: 'city', accent: '#3FA380', soft: '#E6F7F0', track: 'skd',
+  },
+  {
+    slug: 'skd-tkp', universeSlug: 'skd', title: 'Tes Karakteristik Pribadi',
+    description: 'TKP SKD: pelayanan publik, jejaring kerja, sosial budaya, TIK, profesionalisme, anti radikalisme.',
+    difficulty: 'Menengah', duration: 45, objectives: ['Memilih respons situasi kerja yang profesional', 'Menghargai keragaman dan menjaga kolaborasi', 'Menggunakan teknologi secara etis'],
+    art: 'studio', accent: '#3FA380', soft: '#E6F7F0', track: 'skd',
+  },
+  {
+    slug: 'tka-bahasa-indonesia', universeSlug: 'tka', title: 'Bahasa Indonesia TKA',
+    description: 'Mata pelajaran wajib TKA SD, SMP, dan SMA: kompetensi berbahasa dan bersastra.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Memahami teks informasi dan sastra', 'Menguasai kaidah kebahasaan', 'Menyusun argumen dan teks tertulis'],
+    art: 'vault', accent: '#D9A25B', soft: '#FFF3E3', track: 'tka',
+  },
+  {
+    slug: 'tka-matematika', universeSlug: 'tka', title: 'Matematika TKA',
+    description: 'Mata pelajaran wajib TKA di semua jenjang: kompetensi matematika sesuai kurikulum.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Menguasai bilangan dan aljabar', 'Menyelesaikan geometri dan pengukuran', 'Menganalisis data dan peluang'],
+    art: 'city', accent: '#D9A25B', soft: '#FFF3E3', track: 'tka',
+  },
+  {
+    slug: 'tka-bahasa-inggris', universeSlug: 'tka', title: 'Bahasa Inggris TKA',
+    description: 'Mata pelajaran wajib TKA jenjang SMA: reading, listening, writing, dan speaking.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Memahami teks dan percakapan bahasa Inggris', 'Menguasai struktur dan kosakata', 'Menyusun teks singkat yang benar'],
+    art: 'island', accent: '#D9A25B', soft: '#FFF3E3', track: 'tka',
+  },
+  {
+    slug: 'tka-fisika', universeSlug: 'tka', title: 'Fisika TKA',
+    description: 'Salah satu mata pelajaran pilihan TKA SMA: konsep dan penalaran fisika.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Menganalisis gerak dan gaya', 'Memahami energi dan gelombang', 'Menyelesaikan masalah fisika sederhana'],
+    art: 'castle', accent: '#D9A25B', soft: '#FFF3E3', track: 'tka',
+  },
+  {
+    slug: 'tka-biologi', universeSlug: 'tka', title: 'Biologi TKA',
+    description: 'Salah satu mata pelajaran pilihan TKA SMA: makhluk hidup dan prosesnya.',
+    difficulty: 'Menengah', duration: 30, objectives: ['Memahami sel, genetika, dan metabolisme', 'Menganalisis ekologi dan evolusi', 'Menjelaskan sistem organ tubuh'],
+    art: 'brain', accent: '#D9A25B', soft: '#FFF3E3', track: 'tka',
+  },
+  {
+    slug: 'internet-works', universeSlug: 'teknologi', title: 'Bagaimana Internet Bekerja',
     description: 'Dari mengetik alamat website sampai halaman muncul di layarmu, pahami perjalanan data di baliknya.',
     difficulty: 'Pemula', duration: 18, objectives: ['Menjelaskan peran browser, server, dan DNS', 'Memahami jalur pengiriman data sederhana', 'Mengenali dasar keamanan saat browsing'],
-    art: 'island', accent: '#7C6CF0', soft: '#EFECFF',
+    art: 'island', accent: '#59A6C9', soft: '#E6F5FB', track: 'teknologi',
   },
   {
-    slug: 'human-body-systems', universeSlug: 'science-lab', title: 'Sistem Tubuh Manusia',
-    description: 'Kenali sistem organ yang bekerja bersama menjaga tubuh tetap hidup dan sehat.',
-    difficulty: 'Pemula', duration: 24, objectives: ['Menyebutkan sistem organ utama', 'Menjelaskan fungsi sistem peredaran darah', 'Memahami hubungan antar sistem'],
-    art: 'castle', accent: '#5C8DF6', soft: '#E9F0FF',
+    slug: 'teknologi-ai', universeSlug: 'teknologi', title: 'Dasar Kecerdasan Buatan',
+    description: 'Pahami cara kerja AI sederhana dan batasannya.',
+    difficulty: 'Pemula', duration: 16, objectives: ['Menjelaskan pengertian kecerdasan buatan', 'Mengenali contoh AI sehari-hari', 'Memahami batas dan risiko AI'],
+    art: 'brain', accent: '#59A6C9', soft: '#E6F5FB', track: 'teknologi',
   },
   {
-    slug: 'space-exploration', universeSlug: 'science-lab', title: 'Menjelajahi Luar Angkasa',
-    description: 'Dari planet dalam tata surya sampai galaksi yang jauh, mulai dari rasa penasaran.',
-    difficulty: 'Menengah', duration: 22, objectives: ['Mengenali susunan tata surya', 'Memahami perbedaan planet dan bintang', 'Menjelaskan dasar eksplorasi luar angkasa'],
-    art: 'castle', accent: '#5C8DF6', soft: '#E9F0FF',
-  },
-  {
-    slug: 'memory-and-learning', universeSlug: 'mind-space', title: 'Memori & Cara Belajar',
-    description: 'Mengapa kita mudah lupa dan bagaimana otak menyimpan informasi lebih baik.',
-    difficulty: 'Pemula', duration: 15, objectives: ['Memahami tahapan memori', 'Mengetahui pengulangan terarah', 'Menerapkan teknik belajar sederhana'],
-    art: 'brain', accent: '#E58AB6', soft: '#FDECF4',
-  },
-  {
-    slug: 'smart-budgeting', universeSlug: 'financial-district', title: 'Budgeting yang Realistis',
-    description: 'Susun rencana keuangan harian yang tidak memberatkan dan tetap bisa dijalankan.',
-    difficulty: 'Pemula', duration: 14, objectives: ['Mencatat pemasukan dan pengeluaran', 'Membuat kategori budget', 'Menetapkan prioritas yang realistis'],
-    art: 'city', accent: '#4FB992', soft: '#E6F7F0',
-  },
-  {
-    slug: 'ancient-civilizations', universeSlug: 'history-vault', title: 'Peradaban Kuno',
-    description: 'Mengapa manusia mulai membangun kota, menulis, dan membentuk peradaban.',
-    difficulty: 'Menengah', duration: 20, objectives: ['Mengetahui ciri peradaban awal', 'Memahami peran sungai dalam peradaban', 'Membaca linimasa sederhana'],
-    art: 'vault', accent: '#D9A25B', soft: '#FFF3E3',
-  },
-  {
-    slug: 'creative-thinking', universeSlug: 'creative-studio', title: 'Berpikir Kreatif',
-    description: 'Latih cara melihat masalah dari sudut pandang yang berbeda.',
-    difficulty: 'Pemula', duration: 12, objectives: ['Mengenali hambatan berpikir', 'Mencoba teknik ide sederhana', 'Menghasilkan beberapa alternatif solusi'],
-    art: 'studio', accent: '#E5806C', soft: '#FFEDE8',
-  },
-  {
-    slug: 'logical-reasoning', universeSlug: 'logic-arena', title: 'Dasar Penalaran Logika',
-    description: 'Latih pola pikir runtut dengan contoh teka-teki sehari-hari.',
-    difficulty: 'Menengah', duration: 16, objectives: ['Memahami pernyataan dan kesimpulan', 'Mengenali pola berulang', 'Menyusun argumen sederhana'],
-    art: 'arena', accent: '#8E82E8', soft: '#EFEDFF',
+    slug: 'teknologi-keamanan', universeSlug: 'teknologi', title: 'Keamanan Digital',
+    description: 'Lindungi akun dan data pribadi saat menggunakan internet.',
+    difficulty: 'Pemula', duration: 14, objectives: ['Mengenali kata sandi yang kuat', 'Mendeteksi tautan mencurigakan', 'Memahami pentingnya verifikasi dua langkah'],
+    art: 'vault', accent: '#59A6C9', soft: '#E6F5FB', track: 'teknologi',
   },
 ]
 
@@ -140,55 +280,10 @@ export const topics: Topic[] = topicSeeds.map((seed, index) => ({
   ...seed,
   id: `t${index + 1}`,
   quizId: `q${index + 1}`,
-  lessons: makeLessons(seed.title, seed.objectives[1]),
+  lessons: (lessonContent[seed.slug] ?? []).map((lesson, index) => ({ ...lesson, id: `${seed.slug}-l${index + 1}` })),
 }))
 
-function makeQuiz(topic: Topic): Quiz {
-  return {
-    id: topic.quizId,
-    topicTitle: topic.title,
-    questions: [
-      {
-        id: `${topic.id}-q1`,
-        prompt: `Manakah pernyataan yang paling tepat mengenai ${topic.title.toLowerCase()}?`,
-        options: [
-          { id: 'a', label: topic.objectives[0] },
-          { id: 'b', label: 'Semua informasi harus dihafal tanpa konteks' },
-          { id: 'c', label: 'Materi ini tidak memiliki penerapan praktis' },
-          { id: 'd', label: 'Hanya pakar yang bisa memahaminya' },
-        ],
-        correctId: 'a',
-        explanation: `Pernyataan pertama sesuai dengan tujuan pembelajaran: ${topic.objectives[0].toLowerCase()}.`,
-      },
-      {
-        id: `${topic.id}-q2`,
-        prompt: `Apa langkah terbaik ketika mempelajari ${topic.title.toLowerCase()}?`,
-        options: [
-          { id: 'a', label: 'Membaca sekali lalu langsung selesai' },
-          { id: 'b', label: 'Mengulang dengan contoh dan menjelaskannya kembali' },
-          { id: 'c', label: 'Menunda sampai besok tanpa rencana' },
-          { id: 'd', label: 'Mengabaikan penjelasan yang tersedia' },
-        ],
-        correctId: 'b',
-        explanation: 'Belajar dengan contoh dan penjelasan ulang membantu informasi bertahan lebih lama.',
-      },
-      {
-        id: `${topic.id}-q3`,
-        prompt: `Setelah menyelesaikan materi ini, apa yang sebaiknya dilakukan?`,
-        options: [
-          { id: 'a', label: 'Menutup aplikasi tanpa mencatat apa pun' },
-          { id: 'b', label: 'Menyimpan catatan dan mencoba kuis berikutnya' },
-          { id: 'c', label: 'Mengulang halaman yang sama berkali-kali tanpa tujuan' },
-          { id: 'd', label: 'Menganggap satu kuis sebagai bukti keahlian penuh' },
-        ],
-        correctId: 'b',
-        explanation: 'Catatan dan latihan lanjutan membantu membangun pemahaman bertahap, bukan penguasaan instan.',
-      },
-    ],
-  }
-}
-
-export const quizzes: Quiz[] = topics.map(makeQuiz)
+export const quizzes: Quiz[] = topics.map((topic) => examQuiz(topic.quizId, topic.title, questionContent[topic.slug] ?? []))
 
 export const games: Game[] = [
   { slug: 'brain-rush', title: 'Brain Rush', description: 'Jawab pertanyaan cepat, kejar skor tertinggi!', category: 'Brain', difficulty: 'Pemula', accent: '#7C6CF0', xp: 20 },

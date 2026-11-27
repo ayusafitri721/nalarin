@@ -22,11 +22,17 @@ export function QuizPage() {
   const score = quiz.questions.filter((q) => answers[q.id] === q.correctId).length
 
   useEffect(() => {
-    if (feedback) return
     setSeconds(45)
     const timer = window.setInterval(() => setSeconds((s) => Math.max(0, s - 1)), 1000)
     return () => window.clearInterval(timer)
-  }, [index, feedback])
+  }, [index])
+
+  useEffect(() => {
+    if (seconds !== 0 || feedback || !question) return
+    const choice = selected ?? ''
+    setFeedback(choice === question.correctId ? 'correct' : 'wrong')
+    setAnswers((prev) => ({ ...prev, [question.id]: choice }))
+  }, [seconds, feedback, selected, question])
 
   const confirm = () => {
     if (!selected || feedback) return
@@ -59,7 +65,8 @@ export function QuizPage() {
           <h1 className="font-display text-xl font-extrabold sm:text-2xl">Pertanyaan {index + 1} dari {quiz.questions.length}</h1>
         </div>
         <span className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-extrabold', seconds <= 10 ? 'bg-danger/15 text-danger' : 'bg-accent-soft text-accent')}>
-          <Clock size={16} /> 00:{String(seconds).padStart(2, '0')}
+          <Clock size={16} />
+          {seconds === 0 ? 'Waktu habis' : `00:${String(seconds).padStart(2, '0')}`}
         </span>
       </div>
 

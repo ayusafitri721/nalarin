@@ -41,23 +41,25 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       <section className="card overflow-hidden !p-0">
-        <div className="h-24" style={{ background: 'linear-gradient(120deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #25233A))' }} />
-        <div className="relative px-5 pb-5 md:px-7">
-          <div className="-mt-9 flex flex-wrap items-end justify-between gap-3">
-            <div className="flex items-end gap-3">
-              <div className="rounded-full border-4 border-surface bg-surface"><Avatar name={user?.name ?? 'Learner'} color={user?.avatar} size={72} /></div>
-              <div className="pb-1">
-                <h1 className="font-display text-xl font-extrabold sm:text-2xl">{user?.name ?? 'Learner'}</h1>
-                <p className="text-sm text-muted">@{user?.username ?? 'learner'}</p>
-                <span className="pill mt-2 !py-1 !text-[11px]"><Sparkles size={12} /> Nalarin Explorer</span>
-              </div>
-            </div>
-            <div className="flex gap-2 pb-1">
-              <button onClick={() => setEditing(!editing)} className="btn btn-outline !py-2 !text-xs"><Pencil size={14} /> Edit Profil</button>
-              <Link to="/app/settings" className="btn btn-outline !py-2 !text-xs"><Settings size={14} /> Pengaturan</Link>
+        <div
+          className="relative flex h-32 items-center justify-between gap-3 px-5 md:px-7"
+          style={{ background: 'linear-gradient(120deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #25233A))' }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="rounded-full border-4 border-white/40"><Avatar name={user?.name ?? 'Learner'} color={user?.avatar} size={68} /></div>
+            <div>
+              <h1 className="font-display text-xl font-extrabold text-white sm:text-2xl">{user?.name ?? 'Learner'}</h1>
+              <p className="text-sm text-white/75">@{user?.username ?? 'learner'}</p>
+              <span className="pill mt-1 !bg-white/15 !py-1 !text-[11px] !text-white"><Sparkles size={12} /> Nalarin Explorer</span>
             </div>
           </div>
-          <p className="mt-3 max-w-xl text-sm text-muted">{user?.bio || 'Sedang membangun kebiasaan belajar yang konsisten, satu langkah kecil setiap hari.'}</p>
+          <div className="flex shrink-0 gap-2">
+            <button onClick={() => setEditing(!editing)} className="btn !border-white/40 !bg-white/10 !py-2 !text-xs !text-white hover:!bg-white/20"><Pencil size={14} /> Edit Profil</button>
+            <Link to="/app/settings" className="btn !border-white/40 !bg-white/10 !py-2 !text-xs !text-white hover:!bg-white/20"><Settings size={14} /> Pengaturan</Link>
+          </div>
+        </div>
+        <div className="relative px-5 pb-5 md:px-7">
+          <p className="mt-5 max-w-xl text-sm text-muted">{user?.bio || 'Sedang membangun kebiasaan belajar yang konsisten, satu langkah kecil setiap hari.'}</p>
 
           {editing && (
             <div className="mt-5 grid gap-3 rounded-2xl bg-bg p-4 sm:grid-cols-2">
