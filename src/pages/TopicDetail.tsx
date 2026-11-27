@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Bookmark, Check, Clock, Play, Target } from 'lucide-react'
 import { UniverseArt } from '@/components/Illustrations'
@@ -11,13 +10,14 @@ export default function TopicDetail() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const topic = getTopic(slug ?? '')
-  const [bookmarked, setBookmarked] = useState(false)
   const completed = useAppStore((s) => s.completedLessons)
+  const bookmarks = useAppStore((s) => s.bookmarks)
   const toggleBookmark = useAppStore((s) => s.toggleBookmark)
   const showToast = useAppStore((s) => s.showToast)
 
   if (!topic) return <EmptyState title="Topik tidak ditemukan" description="Topik yang kamu cari belum tersedia." action={<Link className="btn btn-primary" to="/app/explore">Kembali ke Explore</Link>} />
 
+  const bookmarked = bookmarks.includes(topic.id)
   const done = topic.lessons.filter((l) => completed.includes(l.id)).length
   const progress = topic.lessons.length ? Math.round((done / topic.lessons.length) * 100) : 0
   const firstIncomplete = topic.lessons.find((l) => !completed.includes(l.id)) ?? topic.lessons[0]
@@ -30,7 +30,7 @@ export default function TopicDetail() {
         <div className="relative h-44 overflow-hidden sm:h-56" style={{ background: topic.soft }}>
           <UniverseArt art={topic.art} accent={topic.accent} soft={topic.soft} label={topic.title} />
           <button
-            onClick={() => { setBookmarked(!bookmarked); toggleBookmark(topic.id) }}
+            onClick={() => toggleBookmark(topic.id)}
             className={cn('absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-surface/90 shadow-card transition-colors', bookmarked ? 'text-accent' : 'text-muted hover:text-accent')}
             aria-label={bookmarked ? 'Hapus bookmark' : 'Simpan topik'}
             aria-pressed={bookmarked}
@@ -42,7 +42,7 @@ export default function TopicDetail() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="pill" style={{ background: topic.soft, color: topic.accent }}>{topic.difficulty}</span>
             <span className="pill !bg-bg !text-muted"><Clock size={13} /> {topic.duration} menit</span>
-            {topic.status === 'selesai' && <span className="pill !bg-success/15 !text-success"><Check size={13} /> Selesai</span>}
+            {progress === 100 && <span className="pill !bg-success/15 !text-success"><Check size={13} /> Selesai</span>}
           </div>
           <h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">{topic.title}</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{topic.description}</p>

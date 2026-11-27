@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Check, Lock, Map, Sparkles, Trophy } from 'lucide-react'
+import { Check, Map, Sparkles, Trophy } from 'lucide-react'
 import { ProgressBar } from '@/components/ui'
 import { topics } from '@/data/content'
 import { cn } from '@/lib/utils'
@@ -7,8 +7,18 @@ import { useAppStore } from '@/store/useAppStore'
 
 export default function Journey() {
   const completed = useAppStore((s) => s.completedLessons)
-  const doneCount = topics.filter((t) => t.lessons.every((l) => completed.includes(l.id))).length
+  const quizResults = useAppStore((s) => s.quizResults)
+
+  const progressOf = (topic: (typeof topics)[number]) => {
+    const done = topic.lessons.filter((lesson) => completed.includes(lesson.id)).length
+    const lessonValue = topic.lessons.length ? Math.round((done / topic.lessons.length) * 100) : 0
+    const quiz = quizResults.find((result) => result.quizId === topic.quizId)
+    const quizValue = quiz ? Math.round((quiz.score / quiz.total) * 100) : 0
+    return Math.round((lessonValue + quizValue) / 2)
+  }
+  const doneCount = topics.filter((topic) => progressOf(topic) === 100).length
   const overall = Math.round((doneCount / topics.length) * 100)
+  const currentId = topics.find((topic) => progressOf(topic) < 100)?.id
 
   return (
     <div className="space-y-6">
@@ -36,17 +46,17 @@ export default function Journey() {
         <div className="absolute bottom-10 left-6 top-10 w-0.5 bg-line md:left-1/2" aria-hidden="true" />
         <div className="space-y-5">
           {topics.map((topic, i) => {
-            const isDone = topic.lessons.every((l) => completed.includes(l.id)) || topic.status === 'selesai'
-            const isCurrent = !isDone && (topic.status === 'berjalan' || i === topics.findIndex((t) => t.status === 'berjalan'))
-            const isLocked = !isDone && !isCurrent && topic.difficulty === 'Lanjut'
+            const progress = progressOf(topic)
+            const isDone = progress === 100
+            const isCurrent = topic.id === currentId
             return (
               <div key={topic.id} className={cn('relative flex items-center gap-4', i % 2 === 1 ? 'md:flex-row-reverse' : '')}>
                 <div className={cn('relative z-10 grid h-12 w-12 shrink-0 place-items-center rounded-full border-4 border-bg', isDone ? 'bg-success text-white' : isCurrent ? 'bg-accent text-white shadow-hover' : 'bg-bg text-muted')}>
-                  {isDone ? <Check size={20} /> : isLocked ? <Lock size={18} /> : <Sparkles size={18} />}
+                  {isDone ? <Check size={20} /> : <Sparkles size={18} />}
                 </div>
                 <Link
                   to={`/app/topic/${topic.slug}`}
-                  className={cn('card flex-1 transition-all hover:shadow-hover', isCurrent && 'border-accent/50', isLocked && 'opacity-70')}
+                  className={cn('card flex-1 transition-all hover:shadow-hover', isCurrent && 'border-accent/50')}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
@@ -54,12 +64,12 @@ export default function Journey() {
                       <h2 className="mt-1 font-display text-base font-extrabold">{topic.title}</h2>
                     </div>
                     <span className={cn('pill !text-[11px]', isDone ? '!bg-success/15 !text-success' : isCurrent ? '' : '!bg-bg !text-muted')}>
-                      {isDone ? 'Selesai' : isCurrent ? 'Sedang berjalan' : isLocked ? 'Terkunci' : 'Tersedia'}
+                      {isDone ? 'Selesai' : isCurrent ? 'Sedang berjalan' : 'Tersedia'}
                     </span>
                   </div>
                   <div className="mt-3 flex items-center gap-3">
-                    <ProgressBar value={isDone ? 100 : topic.progress} className="flex-1 !h-1.5" tone={isDone ? 'var(--success)' : topic.accent} />
-                    <span className="text-xs font-bold text-muted">{isDone ? 100 : topic.progress}%</span>
+                    <ProgressBar value={progress} className="flex-1 !h-1.5" tone={isDone ? 'var(--success)' : topic.accent} />
+                    <span className="text-xs font-bold text-muted">{progress}%</span>
                   </div>
                   <p className="mt-2 text-xs text-muted">{topic.lessons.length} modul · {topic.duration} menit · {topic.difficulty}</p>
                 </Link>

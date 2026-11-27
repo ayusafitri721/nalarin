@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from 'recharts'
-import { Award, BookOpen, Check, Flame, Heart, Lightbulb, Sparkles, Star } from 'lucide-react'
+import { Award, BookOpen, Brain, Check, Compass, Flame, Heart, Lightbulb, Sparkles, Star, Sunset, Users } from 'lucide-react'
 import { ProgressBar, SectionHeader } from '@/components/ui'
-import { achievements, companionAssets, companions, skillScores, topics, weeklyActivity } from '@/data/content'
+import { achievements, companionAssets, companions, topics } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
@@ -12,10 +12,8 @@ export function CompanionPage() {
   const updateProfile = useAppStore((s) => s.updateProfile)
   const showToast = useAppStore((s) => s.showToast)
   const [selected, setSelected] = useState(user?.companion ?? 'nori')
-  const [name, setName] = useState(companions.find((c) => c.id === selected)?.name ?? 'Mochi')
-  const [pose, setPose] = useState<'happy' | 'curious' | 'thinking' | 'celebrating' | 'neutral'>('happy')
-  const [accessory, setAccessory] = useState('none')
   const [background, setBackground] = useState('#EEEBFF')
+  const name = companions.find((c) => c.id === selected)?.name ?? 'Mochi'
 
   const save = () => {
     updateProfile({ companion: selected })
@@ -32,7 +30,7 @@ export function CompanionPage() {
             <h2 className="section-title">Pilih karakter</h2>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {companions.map((c) => (
-                <button key={c.id} onClick={() => { setSelected(c.id); setName(c.name) }} className={cn('rounded-2xl border p-3 text-center transition-all', selected === c.id ? 'border-accent bg-accent-soft' : 'border-line hover:border-accent/50')}>
+                <button key={c.id} onClick={() => setSelected(c.id)} className={cn('rounded-2xl border p-3 text-center transition-all', selected === c.id ? 'border-accent bg-accent-soft' : 'border-line hover:border-accent/50')}>
                   <div className="grid h-20 place-items-center rounded-xl" style={{ background: `${c.color}1A` }}><img src={companionAssets[c.id]} alt="" aria-hidden="true" className="h-[72px] w-[72px] object-contain" /></div>
                   <p className="mt-2 font-display text-sm font-extrabold">{c.name}</p>
                   <p className="mt-1 text-[11px] leading-tight text-muted">{c.description}</p>
@@ -43,31 +41,12 @@ export function CompanionPage() {
 
           <section className="card">
             <h2 className="section-title">Kustomisasi</h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div><label className="label">Nama companion</label><input className="input" value={name} onChange={(e) => setName(e.target.value)} /></div>
-              <div>
-                <label className="label">Ekspresi</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {(['happy', 'curious', 'thinking', 'celebrating', 'neutral'] as const).map((p) => (
-                    <button key={p} onClick={() => setPose(p)} className={cn('rounded-full px-3 py-1.5 text-[11px] font-bold capitalize', pose === p ? 'bg-accent text-white' : 'bg-bg text-muted')}>{p}</button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="label">Aksesori</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {['none', '🎀', '🧢', '🕶️', '🎧'].map((a) => (
-                    <button key={a} onClick={() => setAccessory(a)} className={cn('rounded-xl border px-3 py-2 text-sm', accessory === a ? 'border-accent bg-accent-soft' : 'border-line')}>{a === 'none' ? 'Tanpa' : a}</button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="label">Background</label>
-                <div className="flex gap-2">
-                  {['#EEEBFF', '#E7F6EF', '#FFF0E7', '#FCEAF2'].map((b) => (
-                    <button key={b} onClick={() => setBackground(b)} className={cn('h-9 w-9 rounded-full border-2', background === b ? 'border-ink' : 'border-transparent')} style={{ background: b }} aria-label={`Background ${b}`} />
-                  ))}
-                </div>
+            <div className="mt-4">
+              <label className="label">Background preview</label>
+              <div className="flex gap-2">
+                {['#EEEBFF', '#E7F6EF', '#FFF0E7', '#FCEAF2'].map((b) => (
+                  <button key={b} onClick={() => setBackground(b)} className={cn('h-9 w-9 rounded-full border-2', background === b ? 'border-ink' : 'border-transparent')} style={{ background: b }} aria-label={`Background ${b}`} />
+                ))}
               </div>
             </div>
             <button onClick={save} className="btn btn-primary mt-5"><Check size={15} /> Simpan companion</button>
@@ -78,11 +57,9 @@ export function CompanionPage() {
           <p className="mb-3 text-center text-xs font-bold text-muted">Preview</p>
           <div className="relative grid h-56 place-items-center rounded-2xl" style={{ background }}>
             <img src={companionAssets[selected]} alt={`Companion ${name}`} className="h-[150px] w-[150px] object-contain drop-shadow-[0_12px_18px_rgba(37,35,58,.18)]" />
-            {accessory !== 'none' && <span className="absolute left-1/2 top-[38%] -translate-x-1/2 text-3xl">{accessory}</span>}
           </div>
           <p className="mt-3 text-center font-display text-lg font-extrabold">{name}</p>
-          <div className="mt-4 flex items-center justify-between text-xs"><span className="text-muted">Milestone</span><span className="font-bold text-accent">Level 3</span></div>
-          <ProgressBar value={64} className="mt-2" />
+          <div className="mt-4 flex items-center justify-between text-xs"><span className="text-muted">Level {user?.level ?? 1}</span><span className="font-bold text-accent">{user?.xp ?? 0} XP</span></div>
           <div className="mt-5 rounded-2xl bg-bg p-3 text-xs leading-relaxed text-muted">Companion hanya menjadi bagian visual dan motivasi. Kamu tidak perlu merasa bersalah saat tidak membuka aplikasi.</div>
         </section>
       </div>
@@ -92,9 +69,23 @@ export function CompanionPage() {
 
 export function SkillPassport() {
   const completed = useAppStore((s) => s.completedLessons)
+  const quizResults = useAppStore((s) => s.quizResults)
+  const activeDates = useAppStore((s) => s.activeDates)
+
+  const skillScores = topics.map((topic) => {
+    const lessonIds = topic.lessons.map((lesson) => lesson.id)
+    const done = lessonIds.filter((id) => completed.includes(id)).length
+    const lessonValue = lessonIds.length ? Math.round((done / lessonIds.length) * 100) : 0
+    const quiz = quizResults.find((result) => result.quizId === topic.quizId)
+    const quizValue = quiz ? Math.round((quiz.score / quiz.total) * 100) : 0
+    return { skill: topic.title, value: Math.round((lessonValue + quizValue) / 2) }
+  })
+  const topicsExplored = topics.filter((topic) => topic.lessons.some((lesson) => completed.includes(lesson.id))).length
+  const recentQuizzes = [...quizResults].sort((a, b) => b.completedAt.localeCompare(a.completedAt)).slice(0, 5)
+
   return (
     <div className="space-y-6">
-      <div><span className="pill"><Award size={13} /> Skill Passport</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Passport Kemampuanmu</h1><p className="mt-1.5 text-sm text-muted">Gambaran aktivitas yang telah kamu latih — bukan klaim penguasaan.</p></div>
+      <div><span className="pill"><Award size={13} /> Skill Passport</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Passport Kemampuanmu</h1><p className="mt-1.5 text-sm text-muted">Gambaran aktivitas yang telah kamu latih, bukan klaim penguasaan.</p></div>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <div className="card">
@@ -119,15 +110,15 @@ export function SkillPassport() {
               </div>
             ))}
           </div>
-          <p className="mt-5 rounded-xl bg-bg p-3 text-[11px] leading-relaxed text-muted">Nilai dihitung dari jenis aktivitas yang kamu selesaikan (lesson, kuis, game), bukan dari satu kuis saja.</p>
+          <p className="mt-5 rounded-xl bg-bg p-3 text-[11px] leading-relaxed text-muted">Nilai dihitung dari lesson yang selesai dan skor kuis pada topik yang sama.</p>
         </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
         {[
-          { icon: BookOpen, label: 'Lesson diselesaikan', value: completed.length + 12 },
-          { icon: Flame, label: 'Hari aktif', value: 21 },
-          { icon: Sparkles, label: 'Topik dieksplorasi', value: topics.length },
+          { icon: BookOpen, label: 'Lesson diselesaikan', value: completed.length },
+          { icon: Flame, label: 'Hari aktif', value: activeDates.length },
+          { icon: Sparkles, label: 'Topik dieksplorasi', value: topicsExplored },
         ].map((s) => {
           const Icon = s.icon
           return (
@@ -135,49 +126,87 @@ export function SkillPassport() {
           )
         })}
       </div>
-      <div className="card"><SectionHeader title="Riwayat aktivitas" /><div className="space-y-2 text-xs text-muted"><p>• Menyelesaikan modul “Pengenalan” — hari ini</p><p>• Kuis Digital Literacy — kemarin</p><p>• Game Logic Escape — 2 hari lalu</p></div></div>
+      <div className="card">
+        <SectionHeader title="Riwayat kuis" />
+        {recentQuizzes.length ? (
+          <div className="mt-3 space-y-2 text-xs text-muted">
+            {recentQuizzes.map((result) => (
+              <p key={`${result.quizId}-${result.completedAt}`}>
+                Kuis {topics.find((topic) => topic.quizId === result.quizId)?.title ?? result.quizId}, {new Date(result.completedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-3 text-xs text-muted">Belum ada kuis yang selesai.</p>
+        )}
+      </div>
     </div>
   )
 }
 
+const achievementIcons: Record<string, typeof Award> = {
+  a1: Compass, a2: BookOpen, a3: Flame, a4: Brain, a5: Users, a6: Lightbulb,
+}
+
 export function Achievements() {
   const [filter, setFilter] = useState('Semua')
-  const visible = filter === 'Semua' ? achievements : achievements.filter((a) => filter === 'Terbuka' ? a.unlocked : !a.unlocked)
+  const completed = useAppStore((s) => s.completedLessons)
+  const quizResults = useAppStore((s) => s.quizResults)
+  const notes = useAppStore((s) => s.notes)
+  const user = useAppStore((s) => s.user)
+
+  const unlocked: Record<string, boolean> = {
+    a1: completed.length >= 1,
+    a2: quizResults.length >= 5,
+    a3: (user?.streak ?? 0) >= 7,
+    a4: quizResults.length >= 10,
+    a5: false,
+    a6: Object.keys(notes).length >= 5,
+  }
+  const opened = Object.values(unlocked).filter(Boolean).length
+  const visible = achievements.filter((a) => filter === 'Semua' || (filter === 'Terbuka' ? unlocked[a.id] : !unlocked[a.id]))
   return (
     <div className="space-y-6">
-      <div><span className="pill"><Award size={13} /> Achievement</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Koleksi Badge</h1><p className="mt-1.5 text-sm text-muted">Setiap badge terbuka karena kriteria yang jelas.</p></div>
+      <div><span className="pill"><Award size={13} /> Achievement</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Koleksi Badge</h1><p className="mt-1.5 text-sm text-muted">Badge terbuka mengikuti progres belajarmu.</p></div>
       <div className="flex gap-2">
         {['Semua', 'Terbuka', 'Terkunci'].map((f) => <button key={f} onClick={() => setFilter(f)} className={cn('rounded-full px-4 py-2 text-xs font-bold', filter === f ? 'bg-accent text-white' : 'bg-surface text-muted')}>{f}</button>)}
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {visible.map((a) => (
-          <div key={a.id} className={cn('card text-center', !a.unlocked && 'opacity-60')}>
-            <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl text-3xl" style={{ background: `${a.color}22` }}>{a.icon}</span>
-            <p className="mt-3 font-display text-sm font-extrabold">{a.name}</p>
-            <p className="mt-1 text-[11px] leading-tight text-muted">{a.description}</p>
-            <span className={cn('pill mt-3 !text-[10px]', a.unlocked ? '!bg-success/15 !text-success' : '!bg-bg !text-muted')}>{a.unlocked ? 'Terbuka' : 'Terkunci'}</span>
-          </div>
-        ))}
+        {visible.map((a) => {
+          const Icon = achievementIcons[a.id] ?? Award
+          return (
+            <div key={a.id} className={cn('card text-center', !unlocked[a.id] && 'opacity-60')}>
+              <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl" style={{ background: `${a.color}22`, color: a.color }}><Icon size={30} /></span>
+              <p className="mt-3 font-display text-sm font-extrabold">{a.name}</p>
+              <p className="mt-1 text-[11px] leading-tight text-muted">{a.description}</p>
+              <span className={cn('pill mt-3 !text-[10px]', unlocked[a.id] ? '!bg-success/15 !text-success' : '!bg-bg !text-muted')}>{unlocked[a.id] ? 'Terbuka' : 'Terkunci'}</span>
+            </div>
+          )
+        })}
       </div>
-      <div className="card"><h2 className="font-display text-base font-extrabold">Rewards & Inventory</h2><p className="mt-1 text-xs text-muted">Item kosmetik diperoleh dari pencapaian yang jelas.</p><div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-8">{['🎀', '🧢', '🕶️', '🎧', '🖼️', '⭐', '🌈', '📦'].map((i) => <span key={i} className="grid aspect-square place-items-center rounded-xl bg-bg text-2xl">{i}</span>)}</div></div>
+      <div className="card"><p className="text-sm font-bold">Badge terbuka: {opened} dari {achievements.length}</p><p className="mt-1 text-xs text-muted">Kriteria dihitung dari lesson, kuis, catatan, dan streak yang tersimpan di akunmu.</p></div>
     </div>
   )
 }
 
 export function StreakPage() {
   const user = useAppStore((s) => s.user)
+  const activeDates = useAppStore((s) => s.activeDates)
   const now = new Date()
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
-  const activeDays = [1, 2, 3, 5, 6, 7, 8, 10, 11, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24]
+  const monthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-`
+  const activeDays = new Set(
+    activeDates.filter((key) => key.startsWith(monthPrefix)).map((key) => Number(key.slice(8, 10))),
+  )
   const milestones = [{ at: 3, label: '3 hari' }, { at: 7, label: '7 hari' }, { at: 14, label: '14 hari' }, { at: 30, label: '30 hari' }]
   return (
     <div className="mx-auto max-w-2xl space-y-5">
       <div><span className="pill"><Flame size={13} /> Streak</span><h1 className="mt-3 font-display text-2xl font-extrabold">Streak Belajarmu</h1></div>
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Current', value: user?.streak ?? 7 },
-          { label: 'Longest', value: user?.longestStreak ?? 14 },
-          { label: 'Total aktif', value: user?.totalActiveDays ?? 24 },
+          { label: 'Current', value: user?.streak ?? 0 },
+          { label: 'Longest', value: user?.longestStreak ?? 0 },
+          { label: 'Total aktif', value: activeDates.length },
         ].map((s) => <div key={s.label} className="card text-center"><p className="font-display text-2xl font-extrabold text-accent">{s.value}</p><p className="text-xs text-muted">{s.label}</p></div>)}
       </div>
       <div className="card">
@@ -187,14 +216,14 @@ export function StreakPage() {
           {Array.from({ length: new Date(now.getFullYear(), now.getMonth(), 1).getDay() }).map((_, i) => <span key={`b${i}`} />)}
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1
-            const active = activeDays.includes(day)
+            const active = activeDays.has(day)
             return <span key={day} className={cn('grid aspect-square place-items-center rounded-lg text-[11px] font-bold', active ? 'bg-accent text-white' : day <= now.getDate() ? 'bg-bg text-muted' : 'text-muted/40')}>{day}</span>
           })}
         </div>
       </div>
       <div className="card">
         <h2 className="font-display text-base font-extrabold">Milestone</h2>
-        <div className="mt-4 space-y-3">{milestones.map((m) => <div key={m.at} className="flex items-center gap-3"><span className={cn('grid h-8 w-8 place-items-center rounded-full', (user?.streak ?? 7) >= m.at ? 'bg-success text-white' : 'bg-bg text-muted')}><Check size={15} /></span><span className="text-sm font-bold">{m.label}</span></div>)}</div>
+        <div className="mt-4 space-y-3">{milestones.map((m) => <div key={m.at} className="flex items-center gap-3"><span className={cn('grid h-8 w-8 place-items-center rounded-full', (user?.streak ?? 0) >= m.at ? 'bg-success text-white' : 'bg-bg text-muted')}><Check size={15} /></span><span className="text-sm font-bold">{m.label}</span></div>)}</div>
       </div>
       <div className="card bg-bg">
         <h3 className="font-display text-sm font-extrabold">Aturan streak</h3>
@@ -212,7 +241,7 @@ export function Curiosity() {
     <div className="mx-auto max-w-2xl space-y-5">
       <div><span className="pill"><Lightbulb size={13} /> Curiosity Box</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Pertanyaan hari ini</h1></div>
       <div className="card overflow-hidden !p-0">
-        <div className="grid h-36 place-items-center bg-accent-soft text-6xl">🌅</div>
+        <div className="grid h-36 place-items-center bg-accent-soft text-accent"><Sunset size={72} /></div>
         <div className="p-5">
           <h2 className="font-display text-xl font-extrabold">Mengapa langit berubah warna saat matahari terbenam?</h2>
           <p className="mt-2 text-sm text-muted">Fakta singkat: cahaya matahari melewati lapisan atmosfer yang lebih tebal saat senja, sehingga warna biru tersebar dan warna merah/oranye lebih dominan.</p>
@@ -229,7 +258,7 @@ export function Curiosity() {
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {['Hamburan Rayleigh', 'Efek Doppler', 'Gravitasi', 'Refleksi cahaya'].map((o) => <button key={o} onClick={() => setChoice(o)} className={cn('rounded-xl border p-3 text-left text-sm font-semibold', choice === o ? 'border-accent bg-accent-soft' : 'border-line')}>{o}</button>)}
         </div>
-        {choice && <p className="mt-3 text-xs font-bold text-success">{choice === 'Hamburan Rayleigh' ? 'Benar! Penjelasan sesuai fakta di atas.' : 'Belum tepat — coba baca penjelasan kembali.'}</p>}
+        {choice && <p className="mt-3 text-xs font-bold text-success">{choice === 'Hamburan Rayleigh' ? 'Benar! Penjelasan sesuai fakta di atas.' : 'Belum tepat, coba baca penjelasan kembali.'}</p>}
       </div>
       <Link to="/app/topic/human-body-systems" className="text-sm font-bold text-accent">Topik terkait: Sistem Tubuh Manusia →</Link>
     </div>
@@ -238,23 +267,37 @@ export function Curiosity() {
 
 export function Wrapped() {
   const completed = useAppStore((s) => s.completedLessons)
-  const totalMinutes = weeklyActivity.reduce((a, b) => a + b.minutes, 0)
+  const quizResults = useAppStore((s) => s.quizResults)
+  const activeDates = useAppStore((s) => s.activeDates)
+  const dayLabels = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']
+  const today = new Date()
+  const week = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today)
+    date.setDate(today.getDate() - (6 - i))
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+    return {
+      key,
+      label: dayLabels[date.getDay()],
+      quizzes: quizResults.filter((result) => result.completedAt.slice(0, 10) === key).length,
+      active: activeDates.includes(key),
+    }
+  })
+  const maxQuizzes = Math.max(1, ...week.map((day) => day.quizzes))
   return (
     <div className="mx-auto max-w-2xl space-y-5">
-      <div><span className="pill"><Star size={13} /> Learning Wrapped</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Ringkasan Belajarmu</h1><p className="mt-1.5 text-sm text-muted">Minggu ini · hanya metrik yang benar-benar dihitung dari aktivitasmu.</p></div>
+      <div><span className="pill"><Star size={13} /> Learning Wrapped</span><h1 className="mt-3 font-display text-2xl font-extrabold sm:text-3xl">Ringkasan Belajarmu</h1><p className="mt-1.5 text-sm text-muted">Tujuh hari terakhir, dihitung dari aktivitas yang tersimpan.</p></div>
       <div className="grid gap-3 sm:grid-cols-3">
         {[
-          { label: 'Total waktu belajar', value: `${totalMinutes} menit` },
-          { label: 'Lesson selesai', value: completed.length + 12 },
-          { label: 'Hari aktif', value: weeklyActivity.filter((d) => d.minutes > 0).length },
+          { label: 'Kuis selesai', value: quizResults.length },
+          { label: 'Lesson selesai', value: completed.length },
+          { label: 'Hari aktif', value: week.filter((day) => day.active).length },
         ].map((s) => <div key={s.label} className="card text-center"><p className="font-display text-xl font-extrabold text-accent">{s.value}</p><p className="mt-1 text-xs text-muted">{s.label}</p></div>)}
       </div>
       <div className="card">
-        <h2 className="font-display text-base font-extrabold">Aktivitas per hari</h2>
-        <div className="mt-4 space-y-2.5">{weeklyActivity.map((d) => <div key={d.day} className="flex items-center gap-3"><span className="w-10 text-xs font-bold text-muted">{d.day}</span><ProgressBar value={(d.minutes / 60) * 100} className="flex-1" /><span className="w-12 text-right text-xs font-bold">{d.minutes}m</span></div>)}</div>
+        <h2 className="font-display text-base font-extrabold">Kuis per hari</h2>
+        <div className="mt-4 space-y-2.5">{week.map((d) => <div key={d.key} className="flex items-center gap-3"><span className="w-10 text-xs font-bold text-muted">{d.label}</span><ProgressBar value={(d.quizzes / maxQuizzes) * 100} className="flex-1" /><span className="w-8 text-right text-xs font-bold">{d.quizzes}</span></div>)}</div>
       </div>
       <div className="card bg-accent-soft"><Heart size={20} className="text-accent" /><p className="mt-2 font-display text-sm font-extrabold">Konsistensi dibangun sedikit demi sedikit.</p><p className="mt-1 text-xs text-muted">Terima kasih sudah meluangkan waktu untuk belajar minggu ini.</p></div>
-      <p className="text-xs text-muted">Data contoh di halaman ini berasal dari ringkasan aktivitas lokal, bukan data pengguna nyata dari server.</p>
     </div>
   )
 }

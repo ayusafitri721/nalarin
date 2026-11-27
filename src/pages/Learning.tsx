@@ -24,7 +24,8 @@ export default function Learning() {
   const { topic, lesson } = found
   const index = topic.lessons.findIndex((l) => l.id === lesson!.id)
   const isDone = completed.includes(lesson!.id)
-  const progress = Math.round(((index + 1) / topic.lessons.length) * 100)
+  const doneCount = topic.lessons.filter((l) => completed.includes(l.id)).length
+  const progress = topic.lessons.length ? Math.round((doneCount / topic.lessons.length) * 100) : 0
 
   return (
     <div className="space-y-5">

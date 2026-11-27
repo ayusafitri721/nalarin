@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Award, BookOpen, Check, Flame, Pencil, Settings, ShieldCheck, Sparkles, Zap } from 'lucide-react'
+import { Award, BookOpen, Brain, Check, Compass, Flame, Lightbulb, Pencil, Settings, Sparkles, Users, Zap } from 'lucide-react'
 import { Avatar, StatCard } from '@/components/ui'
-import { achievements, companionAssets } from '@/data/content'
+import { achievements, companionAssets, topics } from '@/data/content'
 import { cn, formatNumber } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
@@ -10,12 +10,27 @@ export default function Profile() {
   const user = useAppStore((s) => s.user)
   const updateProfile = useAppStore((s) => s.updateProfile)
   const completed = useAppStore((s) => s.completedLessons)
+  const quizResults = useAppStore((s) => s.quizResults)
+  const notes = useAppStore((s) => s.notes)
   const showToast = useAppStore((s) => s.showToast)
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(user?.name ?? '')
   const [bio, setBio] = useState(user?.bio ?? '')
   const [publicStats, setPublicStats] = useState(true)
   const [publicAchievements, setPublicAchievements] = useState(true)
+
+  const unlockedAchievements: Record<string, boolean> = {
+    a1: completed.length >= 1,
+    a2: quizResults.length >= 5,
+    a3: (user?.streak ?? 0) >= 7,
+    a4: quizResults.length >= 10,
+    a5: false,
+    a6: Object.keys(notes).length >= 5,
+  }
+  const achievementIcons: Record<string, typeof Award> = {
+    a1: Compass, a2: BookOpen, a3: Flame, a4: Brain, a5: Users, a6: Lightbulb,
+  }
+  const topicsExplored = topics.filter((topic) => topic.lessons.some((lesson) => completed.includes(lesson.id))).length
 
   const save = () => {
     updateProfile({ name: name.trim() || 'Learner', bio })
@@ -56,30 +71,32 @@ export default function Profile() {
           )}
 
           <div className="mt-6 grid grid-cols-3 gap-3">
-            <StatCard icon={<Flame size={18} />} label="Streak" value={user?.streak ?? 7} />
-            <StatCard icon={<Award size={18} />} label="Achievement" value={achievements.filter((a) => a.unlocked).length} />
-            <StatCard icon={<BookOpen size={18} />} label="Pelajaran" value={completed.length + 12} />
+            <StatCard icon={<Flame size={18} />} label="Streak" value={user?.streak ?? 0} />
+            <StatCard icon={<Award size={18} />} label="Achievement" value={achievements.filter((a) => unlockedAchievements[a.id]).length} />
+            <StatCard icon={<BookOpen size={18} />} label="Pelajaran" value={completed.length} />
           </div>
         </div>
       </section>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <StatCard icon={<Zap size={18} />} label="Total XP" value={formatNumber(user?.xp ?? 2350)} hint={`Level ${user?.level ?? 10}`} />
-        <StatCard icon={<Sparkles size={18} />} label="Topik dijelajahi" value={8} />
-        <StatCard icon={<ShieldCheck size={18} />} label="Bergabung sejak" value="2026" />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <StatCard icon={<Zap size={18} />} label="Total XP" value={formatNumber(user?.xp ?? 0)} hint={`Level ${user?.level ?? 1}`} />
+        <StatCard icon={<Sparkles size={18} />} label="Topik dijelajahi" value={topicsExplored} />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <section>
           <h2 className="section-title">Achievement Pilihan</h2>
           <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
-            {achievements.map((a) => (
-              <div key={a.id} className={cn('card flex flex-col items-center !p-3 text-center', !a.unlocked && 'opacity-50')}>
-                <span className="grid h-12 w-12 place-items-center rounded-2xl text-2xl" style={{ background: `${a.color}22` }}>{a.icon}</span>
+            {achievements.map((a) => {
+              const Icon = achievementIcons[a.id] ?? Award
+              return (
+              <div key={a.id} className={cn('card flex flex-col items-center !p-3 text-center', !unlockedAchievements[a.id] && 'opacity-50')}>
+                <span className="grid h-12 w-12 place-items-center rounded-2xl" style={{ background: `${a.color}22`, color: a.color }}><Icon size={22} /></span>
                 <p className="mt-2 text-[11px] font-bold leading-tight">{a.name}</p>
                 <p className="mt-1 text-[10px] leading-tight text-muted">{a.description}</p>
               </div>
-            ))}
+              )
+            })}
           </div>
           <Link to="/app/achievements" className="mt-4 inline-block text-sm font-bold text-accent hover:underline">Lihat semua achievement →</Link>
         </section>

@@ -39,10 +39,6 @@ export interface Universe {
   soft: string
   icon: string
   art: 'castle' | 'island' | 'brain' | 'city' | 'vault' | 'studio' | 'sphere' | 'arena'
-  topicCount: number
-  gameCount: number
-  questCount: number
-  progress: number
   subcategories: string[]
 }
 
@@ -71,11 +67,9 @@ export interface Topic {
   objectives: string[]
   lessons: Lesson[]
   quizId: string
-  progress: number
   art: Universe['art']
   accent: string
   soft: string
-  status: 'belum' | 'berjalan' | 'selesai'
 }
 
 export interface QuizOption {
@@ -103,9 +97,7 @@ export interface Game {
   description: string
   category: 'Brain' | 'Puzzle' | 'Word' | 'Story' | 'Memory' | 'Fact' | 'Decision'
   difficulty: Difficulty
-  bestScore: number
   accent: string
-  art: string
   xp: number
 }
 
@@ -115,9 +107,7 @@ export interface Quest {
   description: string
   category: 'Harian' | 'Mingguan' | 'Spesial' | 'Dunia Nyata'
   reward: number
-  progress: number
   target: number
-  status: 'aktif' | 'selesai'
   deadline?: string
 }
 
@@ -136,8 +126,6 @@ export interface Achievement {
   id: string
   name: string
   description: string
-  icon: string
-  unlocked: boolean
   color: string
 }
 

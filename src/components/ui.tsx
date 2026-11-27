@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, Inbox } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -89,14 +89,16 @@ export function ToastHost() {
   )
 }
 
-export function CompanionCard({ companionId, message }: { companionId: string; message: string }) {
+export function CompanionCard({ companionId, message, className, header }: { companionId: string; message: string; className?: string; header?: ReactNode }) {
   return (
-    <div className="card flex items-center gap-3 overflow-hidden">
-      <img src={companionAssets[companionId]} alt="Companion" className="h-[72px] w-[72px] shrink-0 object-contain" />
-      <div className="min-w-0">
-        <p className="font-display text-sm font-extrabold">My Companion</p>
-        <p className="mt-1 text-xs leading-relaxed text-muted">{message}</p>
-        <Link to="/app/companion" className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-accent hover:underline">Lihat companion</Link>
+    <div className={cn('card flex flex-col gap-4 overflow-hidden', className)}>
+      {header}
+      <div className="flex flex-1 items-center gap-4">
+        <img src={companionAssets[companionId]} alt="Companion" className="h-16 w-16 shrink-0 object-contain" />
+        <div className="min-w-0">
+          <p className="text-xs leading-relaxed text-muted">{message}</p>
+          <Link to="/app/companion" className="mt-2 inline-flex min-h-11 items-center text-xs font-bold text-accent hover:underline">Lihat companion</Link>
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Check, Clock, Gift, ScrollText, Sparkles } from 'lucide-react'
 import { ProgressBar } from '@/components/ui'
-import { quests } from '@/data/content'
+import { quests, topics } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
@@ -11,7 +11,22 @@ export default function Quest() {
   const [tab, setTab] = useState<(typeof tabs)[number]>('Semua')
   const claimed = useAppStore((s) => s.claimedRewards)
   const claimReward = useAppStore((s) => s.claimReward)
+  const completed = useAppStore((s) => s.completedLessons)
+  const quizResults = useAppStore((s) => s.quizResults)
+  const gameScores = useAppStore((s) => s.gameScores)
+  const notes = useAppStore((s) => s.notes)
+  const user = useAppStore((s) => s.user)
   const visible = tab === 'Semua' ? quests : quests.filter((q) => q.category === tab)
+
+  const progressFor = (id: string) => {
+    if (id === 'qd1') return completed.length
+    if (id === 'qd2') return quizResults.length
+    if (id === 'qd3') return topics.filter((topic) => topic.lessons.some((lesson) => completed.includes(lesson.id)) || quizResults.some((result) => result.quizId === topic.quizId)).length
+    if (id === 'qw1') return user?.streak ?? 0
+    if (id === 'qw2') return Object.keys(gameScores).length
+    if (id === 'qr1') return Object.keys(notes).length
+    return 0
+  }
 
   return (
     <div className="space-y-6">
@@ -27,9 +42,10 @@ export default function Quest() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {visible.map((q) => {
-          const done = q.status === 'selesai'
+          const progress = Math.min(progressFor(q.id), q.target)
+          const done = progress >= q.target
           const isClaimed = claimed.includes(`quest:${q.id}`)
-          const percent = Math.round((q.progress / q.target) * 100)
+          const percent = Math.round((progress / q.target) * 100)
           return (
             <div key={q.id} className={cn('card', done && 'border-success/40')}>
               <div className="flex items-start gap-3">
@@ -45,7 +61,7 @@ export default function Quest() {
                 </div>
               </div>
               <div className="mt-4">
-                <div className="mb-1.5 flex justify-between text-xs font-bold"><span className="text-muted">Progress</span><span>{q.progress}/{q.target}</span></div>
+                <div className="mb-1.5 flex justify-between text-xs font-bold"><span className="text-muted">Progress</span><span>{progress}/{q.target}</span></div>
                 <ProgressBar value={done ? 100 : percent} tone={done ? 'var(--success)' : undefined} />
               </div>
               <div className="mt-4 flex items-center justify-between gap-2">

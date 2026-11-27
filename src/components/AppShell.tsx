@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
-  Bell, Compass, Flame, Gamepad2, Home, Menu, Route, ScrollText, Search,
-  Settings, Sparkles, UserRound, Users, X, Zap,
+  Bell, Compass, Flame, Gamepad2, Home, Menu, PanelLeftClose, PanelLeftOpen,
+  Route, ScrollText, Search, Settings, Sparkles, UserRound, Users, X, Zap,
 } from 'lucide-react'
 import { cn, formatNumber } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 import { Logo } from '@/components/Illustrations'
 import { Avatar } from '@/components/ui'
 
-const mainNav = [
+type NavEntry = { to: string; label: string; icon: typeof Home; end?: boolean }
+
+const mainNav: NavEntry[] = [
   { to: '/app', label: 'Home', icon: Home, end: true },
   { to: '/app/explore', label: 'Explore', icon: Compass },
   { to: '/app/journey', label: 'Journey', icon: Route },
@@ -18,13 +20,13 @@ const mainNav = [
   { to: '/app/friends', label: 'Friends', icon: Users },
 ]
 
-const bottomNav = [
+const bottomNav: NavEntry[] = [
   { to: '/app/companion', label: 'Companion', icon: Sparkles },
   { to: '/app/profile', label: 'Profile', icon: UserRound },
   { to: '/app/settings', label: 'Settings', icon: Settings },
 ]
 
-const mobileNav = [
+const mobileNav: NavEntry[] = [
   { to: '/app', label: 'Home', icon: Home, end: true },
   { to: '/app/explore', label: 'Explore', icon: Compass },
   { to: '/app/journey', label: 'Journey', icon: Route },
@@ -32,29 +34,54 @@ const mobileNav = [
   { to: '/app/friends', label: 'Friends', icon: Users },
 ]
 
-function NavItem({ item, onClick }: { item: (typeof mainNav)[number]; onClick?: () => void }) {
+function NavItem({ item, onClick, compact }: { item: NavEntry; onClick?: () => void; compact?: boolean }) {
   const Icon = item.icon
   return (
     <NavLink
       to={item.to}
       end={item.end}
       onClick={onClick}
+      title={compact ? item.label : undefined}
+      aria-label={compact ? item.label : undefined}
       className={({ isActive }) => cn(
-        'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors',
-        isActive ? 'bg-accent-soft text-accent' : 'text-muted hover:bg-accent-soft/60 hover:text-ink',
+        'group relative flex items-center rounded-xl text-sm font-semibold transition-all duration-200',
+        compact ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5',
+        isActive
+          ? 'bg-accent-soft text-accent shadow-[inset_3px_0_0_var(--accent)]'
+          : 'text-muted hover:bg-accent-soft/60 hover:text-ink',
       )}
     >
-      <Icon size={19} />
-      <span>{item.label}</span>
+      <Icon size={19} className="shrink-0 transition-transform duration-200 group-hover:scale-110" />
+      {!compact && <span>{item.label}</span>}
     </NavLink>
   )
 }
 
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <p className="mb-2 px-3 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted/70">{children}</p>
+}
+
 export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem('nalarin:sidebar-collapsed') === '1' } catch { return false }
+  })
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
   const user = useAppStore((s) => s.user)
+
+  useEffect(() => {
+    try { localStorage.setItem('nalarin:sidebar-collapsed', collapsed ? '1' : '0') } catch { /* storage opsional */ }
+  }, [collapsed])
+
+  useEffect(() => {
+    if (!drawerOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setDrawerOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [drawerOpen])
 
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -64,39 +91,99 @@ export function AppShell() {
     }
   }
 
-  const sidebar = (
+  const renderSidebar = (compact: boolean, onClose?: () => void) => (
     <div className="flex h-full flex-col px-3 py-5">
-      <Link to="/app" className="mb-7 px-2" onClick={() => setDrawerOpen(false)}><Logo /></Link>
-      <nav className="flex flex-1 flex-col gap-1" aria-label="Navigasi utama">
-        {mainNav.map((item) => <NavItem key={item.to} item={item} onClick={() => setDrawerOpen(false)} />)}
-      </nav>
-      <div className="my-4 divider" />
-      <nav className="flex flex-col gap-1" aria-label="Navigasi tambahan">
-        {bottomNav.map((item) => <NavItem key={item.to} item={item} onClick={() => setDrawerOpen(false)} />)}
-      </nav>
-      <div className="mt-5 rounded-2xl bg-accent-soft p-3.5">
-        <p className="font-display text-xs font-extrabold text-accent">Learn Beyond Limits</p>
-        <p className="mt-1 text-[11px] leading-relaxed text-muted">Satu langkah kecil tetap berarti hari ini.</p>
+      <div className={cn('mb-7 flex items-center', compact ? 'justify-center' : 'justify-between px-2')}>
+        <Link to="/app" onClick={onClose} aria-label="Nalarin home"><Logo compact={compact} /></Link>
+        {onClose ? (
+          <button
+            onClick={onClose}
+            className="grid h-9 w-9 place-items-center rounded-xl text-muted transition-colors hover:bg-accent-soft hover:text-ink"
+            aria-label="Tutup menu"
+          >
+            <X size={18} />
+          </button>
+        ) : !compact ? (
+          <button
+            onClick={() => setCollapsed(true)}
+            className="grid h-9 w-9 place-items-center rounded-xl text-muted transition-colors hover:bg-accent-soft hover:text-ink"
+            aria-label="Ciutkan menu"
+            title="Ciutkan menu"
+          >
+            <PanelLeftClose size={19} />
+          </button>
+        ) : null}
       </div>
+
+      {!compact && <SectionLabel>Menu utama</SectionLabel>}
+      <nav className="flex flex-1 flex-col gap-1" aria-label="Navigasi utama">
+        {mainNav.map((item) => <NavItem key={item.to} item={item} onClick={onClose} compact={compact} />)}
+      </nav>
+
+      <div className="my-4 divider" />
+
+      {!compact && <SectionLabel>Akun &amp; teman</SectionLabel>}
+      <nav className="flex flex-col gap-1" aria-label="Navigasi tambahan">
+        {bottomNav.map((item) => <NavItem key={item.to} item={item} onClick={onClose} compact={compact} />)}
+      </nav>
+
+      {compact && !onClose && (
+        <button
+          onClick={() => setCollapsed(false)}
+          className="mt-auto grid h-10 w-10 place-items-center self-center rounded-xl text-muted transition-colors hover:bg-accent-soft hover:text-ink"
+          aria-label="Buka menu"
+          title="Buka menu"
+        >
+          <PanelLeftOpen size={19} />
+        </button>
+      )}
+
+      {!compact && (
+        <div className="mt-5 rounded-2xl bg-accent-soft p-3.5">
+          <p className="font-display text-xs font-extrabold text-accent">Learn Beyond Limits</p>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted">Satu langkah kecil tetap berarti hari ini.</p>
+        </div>
+      )}
     </div>
   )
 
   return (
     <div className="min-h-screen bg-bg">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 border-r border-line bg-surface lg:block">{sidebar}</aside>
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-30 hidden border-r border-line bg-surface transition-[width] duration-300 ease-in-out lg:block',
+          collapsed ? 'w-20' : 'w-60',
+        )}
+      >
+        {renderSidebar(collapsed)}
+      </aside>
 
       {drawerOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button className="absolute inset-0 bg-black/40" aria-label="Tutup menu" onClick={() => setDrawerOpen(false)} />
-          <aside className="absolute inset-y-0 left-0 w-64 bg-surface shadow-modal">{sidebar}</aside>
-          <button className="absolute left-[268px] top-4 grid h-9 w-9 place-items-center rounded-full bg-surface text-ink shadow-card" onClick={() => setDrawerOpen(false)} aria-label="Tutup"><X size={18} /></button>
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu navigasi">
+          <button className="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-label="Tutup menu" onClick={() => setDrawerOpen(false)} />
+          <aside className="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-surface shadow-modal">
+            {renderSidebar(false, () => setDrawerOpen(false))}
+          </aside>
         </div>
       )}
 
-      <div className="lg:pl-60">
+      <div className={cn('transition-[padding] duration-300 ease-in-out', collapsed ? 'lg:pl-20' : 'lg:pl-60')}>
         <header className="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-[1240px] items-center gap-3 px-4 md:px-6">
-            <button className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-ink hover:bg-accent-soft lg:hidden" onClick={() => setDrawerOpen(true)} aria-label="Buka menu">
+            <button
+              className="hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-accent-soft hover:text-accent lg:grid"
+              onClick={() => setCollapsed((value) => !value)}
+              aria-label={collapsed ? 'Buka menu' : 'Ciutkan menu'}
+              aria-expanded={!collapsed}
+              title={collapsed ? 'Buka menu' : 'Ciutkan menu'}
+            >
+              {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+            </button>
+            <button
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-ink transition-colors hover:bg-accent-soft lg:hidden"
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Buka menu"
+            >
               <Menu size={20} />
             </button>
             <form onSubmit={submitSearch} className="relative min-w-0 flex-1 md:max-w-sm">
@@ -111,13 +198,13 @@ export function AppShell() {
             </form>
             <div className="ml-auto flex items-center gap-2">
               <span className="hidden items-center gap-1.5 rounded-full bg-warning/15 px-3 py-1.5 text-xs font-extrabold text-warning sm:inline-flex" title="Streak belajar">
-                <Flame size={15} /> {user?.streak ?? 7} Day
+                <Flame size={15} /> {user?.streak ?? 0} Day
               </span>
               <span className="hidden items-center gap-1.5 rounded-full bg-success/15 px-3 py-1.5 text-xs font-extrabold text-success sm:inline-flex" title="Total XP">
-                <Zap size={15} /> {formatNumber(user?.xp ?? 2350)}
+                <Zap size={15} /> {formatNumber(user?.xp ?? 0)}
               </span>
-              <span className="hidden rounded-full bg-accent-soft px-3 py-1.5 text-xs font-extrabold text-accent md:inline-flex">Lv {user?.level ?? 10}</span>
-              <Link to="/app/notifications" className="relative grid h-9 w-9 place-items-center rounded-xl text-muted hover:bg-accent-soft hover:text-accent" aria-label="Notifikasi">
+              <span className="hidden rounded-full bg-accent-soft px-3 py-1.5 text-xs font-extrabold text-accent md:inline-flex">Lv {user?.level ?? 1}</span>
+              <Link to="/app/notifications" className="relative grid h-9 w-9 place-items-center rounded-xl text-muted transition-colors hover:bg-accent-soft hover:text-accent" aria-label="Notifikasi">
                 <Bell size={19} />
                 <span className="absolute right-2 top-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-surface" />
               </Link>

@@ -46,6 +46,8 @@ interface AppState {
   onboarding: OnboardingData | null
   completedLessons: string[]
   quizResults: QuizResult[]
+  gameScores: Record<string, number>
+  activeDates: string[]
   bookmarks: string[]
   notes: Record<string, string>
   claimedRewards: string[]
@@ -65,6 +67,7 @@ interface AppState {
   finishOnboarding: (data: OnboardingData) => void
   completeLesson: (id: string) => void
   submitQuiz: (result: QuizResult) => void
+  submitGameScore: (slug: string, score: number) => void
   toggleBookmark: (id: string) => void
   setNote: (lessonId: string, note: string) => void
   claimReward: (key: string) => void
@@ -85,6 +88,27 @@ function applyThemeToDocument(theme: ThemeState) {
   root.style.setProperty('--accent', theme.accent)
   root.style.setProperty('--accent-hover', darkenColor(theme.accent))
   root.style.setProperty('--accent-on', readableTextColor(theme.accent))
+}
+
+const dayKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
+function activityPatch(state: AppState) {
+  const today = dayKey(new Date())
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  const activeDates = state.activeDates.includes(today) ? state.activeDates : [...state.activeDates, today]
+  const user = state.user
+  if (!user || state.activeDates.includes(today)) return { activeDates }
+  const streak = state.activeDates.includes(dayKey(yesterday)) ? user.streak + 1 : 1
+  return {
+    activeDates,
+    user: {
+      ...user,
+      streak,
+      longestStreak: Math.max(user.longestStreak, streak),
+      totalActiveDays: activeDates.length,
+    },
+  }
 }
 
 const levelFromXp = (xp: number) => {
@@ -117,6 +141,8 @@ const emptyAccountData = {
   onboarding: null,
   completedLessons: [],
   quizResults: [],
+  gameScores: {},
+  activeDates: [],
   bookmarks: [],
   notes: {},
   claimedRewards: [],
@@ -132,6 +158,8 @@ export const useAppStore = create<AppState>()(
       onboarding: null,
       completedLessons: [],
       quizResults: [],
+      gameScores: {},
+      activeDates: [],
       bookmarks: [],
       notes: {},
       claimedRewards: [],
@@ -199,39 +227,46 @@ export const useAppStore = create<AppState>()(
         applyThemeToDocument(data.theme)
       },
       completeLesson: (id) => {
-        if (get().completedLessons.includes(id)) {
-          get().showToast('Lesson ini sudah selesai sebelumnya', 'info')
+        const state = get()
+        if (state.completedLessons.includes(id)) {
+          state.showToast('Lesson ini sudah selesai sebelumnya', 'info')
           return
         }
-        const completedLessons = [...get().completedLessons, id]
-        const user = get().user
-        if (user) {
-          const xp = user.xp + 20
-          set({
-            completedLessons,
-            user: { ...user, xp, level: levelFromXp(xp) },
-          })
-        } else {
-          set({ completedLessons })
-        }
-        get().showToast('+20 XP — Lesson selesai!', 'success')
+        const patch = activityPatch(state)
+        const base = patch.user ?? state.user
+        const xp = (base?.xp ?? 0) + 20
+        set({
+          ...patch,
+          completedLessons: [...state.completedLessons, id],
+          ...(base ? { user: { ...base, xp, level: levelFromXp(xp) } } : {}),
+        })
+        state.showToast('+20 XP, lesson selesai!', 'success')
       },
       submitQuiz: (result) => {
+        const state = get()
         const key = `quiz:${result.quizId}`
-        const alreadyClaimed = get().claimedRewards.includes(key)
-        const best = get().quizResults.find((r) => r.quizId === result.quizId)
+        const alreadyClaimed = state.claimedRewards.includes(key)
+        const best = state.quizResults.find((r) => r.quizId === result.quizId)
         const newBest = !best || result.score > best.score
-        const quizResults = alreadyClaimed
-          ? get().quizResults
-          : [...get().quizResults.filter((r) => r.quizId !== result.quizId), result]
-        const user = get().user
-        if (user && newBest && !alreadyClaimed) {
-          const xp = user.xp + 30
-          set({ quizResults, user: { ...user, xp, level: levelFromXp(xp) }, claimedRewards: [...get().claimedRewards, key] })
-        } else {
-          set({ quizResults })
-        }
-        if (newBest && !alreadyClaimed) get().showToast('+30 XP — Kuis selesai!', 'success')
+        const quizResults = [...state.quizResults.filter((r) => r.quizId !== result.quizId), result]
+        const patch = activityPatch(state)
+        const base = patch.user ?? state.user
+        const xp = (base?.xp ?? 0) + 30
+        set({
+          ...patch,
+          quizResults,
+          ...(base && newBest && !alreadyClaimed
+            ? { user: { ...base, xp, level: levelFromXp(xp) }, claimedRewards: [...state.claimedRewards, key] }
+            : {}),
+        })
+        if (newBest && !alreadyClaimed) state.showToast('+30 XP, kuis selesai!', 'success')
+      },
+      submitGameScore: (slug, score) => {
+        const state = get()
+        set({
+          ...activityPatch(state),
+          gameScores: { ...state.gameScores, [slug]: Math.max(state.gameScores[slug] ?? 0, score) },
+        })
       },
       toggleBookmark: (id) => {
         const bookmarks = get().bookmarks
@@ -279,6 +314,8 @@ export const useAppStore = create<AppState>()(
         onboarding: state.onboarding,
         completedLessons: state.completedLessons,
         quizResults: state.quizResults,
+        gameScores: state.gameScores,
+        activeDates: state.activeDates,
         bookmarks: state.bookmarks,
         notes: state.notes,
         claimedRewards: state.claimedRewards,

@@ -5,17 +5,32 @@ import { UniverseArt } from '@/components/Illustrations'
 import { EmptyState, ProgressBar, SectionHeader } from '@/components/ui'
 import { topics, universes } from '@/data/content'
 import { cn } from '@/lib/utils'
+import { useAppStore } from '@/store/useAppStore'
 
 export default function Explore() {
   const [query, setQuery] = useState('')
   const [difficulty, setDifficulty] = useState('Semua')
   const [status, setStatus] = useState('Semua')
   const [showFilters, setShowFilters] = useState(false)
+  const completed = useAppStore((s) => s.completedLessons)
+  const quizResults = useAppStore((s) => s.quizResults)
+
+  const progressOf = (topic: (typeof topics)[number]) => {
+    const done = topic.lessons.filter((lesson) => completed.includes(lesson.id)).length
+    const lessonValue = topic.lessons.length ? Math.round((done / topic.lessons.length) * 100) : 0
+    const quiz = quizResults.find((result) => result.quizId === topic.quizId)
+    const quizValue = quiz ? Math.round((quiz.score / quiz.total) * 100) : 0
+    return Math.round((lessonValue + quizValue) / 2)
+  }
+  const statusOf = (topic: (typeof topics)[number]) => {
+    const progress = progressOf(topic)
+    return progress === 100 ? 'selesai' : progress > 0 ? 'berjalan' : 'belum'
+  }
 
   const filtered = topics.filter((t) => {
     const matchQuery = t.title.toLowerCase().includes(query.toLowerCase()) || t.description.toLowerCase().includes(query.toLowerCase())
     const matchDifficulty = difficulty === 'Semua' || t.difficulty === difficulty
-    const matchStatus = status === 'Semua' || t.status === status
+    const matchStatus = status === 'Semua' || statusOf(t) === status
     return matchQuery && matchDifficulty && matchStatus
   })
 
@@ -67,7 +82,7 @@ export default function Explore() {
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-8">
           {universes.map((u) => (
             <Link key={u.id} to={`/app/universe/${u.slug}`} className="card group flex flex-col items-center gap-2 !p-3 text-center transition-transform hover:-translate-y-1 hover:shadow-hover">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl text-xl" style={{ background: u.soft }}>🌌</span>
+              <span className="grid h-12 w-12 place-items-center rounded-2xl" style={{ background: u.soft, color: u.accent }}><Compass size={22} /></span>
               <span className="text-[11px] font-bold leading-tight">{u.title}</span>
             </Link>
           ))}
@@ -91,9 +106,9 @@ export default function Explore() {
                   <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted">{t.description}</p>
                   <div className="mt-3 flex items-center justify-between text-[11px] text-muted">
                     <span className="inline-flex items-center gap-1"><Clock size={12} /> {t.duration} menit</span>
-                    <span className="font-bold capitalize" style={{ color: t.accent }}>{t.status}</span>
+                    <span className="font-bold capitalize" style={{ color: t.accent }}>{statusOf(t)}</span>
                   </div>
-                  {t.progress > 0 && <ProgressBar value={t.progress} className="mt-3 !h-1.5" tone={t.accent} />}
+                  {progressOf(t) > 0 && <ProgressBar value={progressOf(t)} className="mt-3 !h-1.5" tone={t.accent} />}
                 </div>
               </Link>
             ))}

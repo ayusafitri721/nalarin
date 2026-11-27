@@ -1,12 +1,22 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Check, Clock, RotateCcw, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpen, Brain, Check, CheckCircle2, Clock, Compass, Gamepad2, HelpCircle, KeyRound, Languages, Puzzle, Rocket, RotateCcw, Target, Trophy } from 'lucide-react'
 import { EmptyState, ProgressBar } from '@/components/ui'
 import { games } from '@/data/content'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
 const categories = ['Semua', 'Brain', 'Puzzle', 'Word', 'Story', 'Memory', 'Fact', 'Decision'] as const
+
+const gameIcons = {
+  Brain,
+  Puzzle: KeyRound,
+  Word: Languages,
+  Story: BookOpen,
+  Memory: Puzzle,
+  Fact: CheckCircle2,
+  Decision: Compass,
+}
 
 interface GameQuestion {
   prompt: string
@@ -51,6 +61,7 @@ const questionBank: Record<string, GameQuestion[]> = {
 
 export function Games() {
   const [category, setCategory] = useState<(typeof categories)[number]>('Semua')
+  const gameScores = useAppStore((s) => s.gameScores)
   const visible = category === 'Semua' ? games : games.filter((g) => g.category === category)
 
   return (
@@ -68,15 +79,15 @@ export function Games() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((g) => (
           <Link key={g.slug} to={`/app/games/${g.slug}`} className="card group overflow-hidden !p-0 transition-all hover:-translate-y-1 hover:shadow-hover">
-            <div className="relative grid h-28 place-items-center text-5xl" style={{ background: `${g.accent}1F` }}>
-              <span>{g.art}</span>
+            <div className="relative grid h-28 place-items-center" style={{ background: `${g.accent}1F` }}>
+              {(() => { const Icon = gameIcons[g.category]; return <Icon size={52} style={{ color: g.accent }} /> })()}
               <span className="absolute right-3 top-3 rounded-full bg-surface/90 px-2.5 py-1 text-[10px] font-bold">{g.difficulty}</span>
             </div>
             <div className="p-4">
               <h2 className="font-display text-base font-extrabold">{g.title}</h2>
               <p className="mt-1 text-xs leading-relaxed text-muted">{g.description}</p>
               <div className="mt-4 flex items-center justify-between text-xs">
-                <span className="inline-flex items-center gap-1 font-bold text-muted"><Trophy size={13} /> Best: {g.bestScore}</span>
+                <span className="inline-flex items-center gap-1 font-bold text-muted"><Trophy size={13} /> {gameScores[g.slug] ? `Terbaik: ${gameScores[g.slug]}` : 'Belum ada skor'}</span>
                 <span className="font-bold text-accent">+{g.xp} XP</span>
               </div>
             </div>
@@ -94,6 +105,7 @@ function QuestionGame({ slug, title, xp }: { slug: string; title: string; xp: nu
   const [score, setScore] = useState(0)
   const [finished, setFinished] = useState(false)
   const awardXp = useAppStore((s) => s.awardXp)
+  const submitGameScore = useAppStore((s) => s.submitGameScore)
   const questions = questionBank[slug] ?? []
   const q = questions[index]
 
@@ -111,6 +123,7 @@ function QuestionGame({ slug, title, xp }: { slug: string; title: string; xp: nu
       return
     }
     setFinished(true)
+    submitGameScore(slug, score)
     awardXp(xp, `game:${slug}`)
   }
 
@@ -119,7 +132,7 @@ function QuestionGame({ slug, title, xp }: { slug: string; title: string; xp: nu
   if (finished) {
     return (
       <div className="card mx-auto max-w-lg text-center !py-10">
-        <span className="text-5xl">{score >= 200 ? '🏆' : '🎮'}</span>
+        {score >= 200 ? <Trophy size={56} className="text-accent" /> : <Gamepad2 size={56} className="text-accent" />}
         <h2 className="mt-4 font-display text-2xl font-extrabold">Game selesai!</h2>
         <p className="mt-2 text-sm text-muted">{title}</p>
         <p className="mt-6 font-display text-4xl font-extrabold text-accent">{score}</p>
@@ -171,27 +184,33 @@ function QuestionGame({ slug, title, xp }: { slug: string; title: string; xp: nu
   )
 }
 
+const memoryIcons = [Brain, BookOpen, Compass, Puzzle, Target, Rocket]
+
 function MemoryGrid({ xp }: { xp: number }) {
-  const emojis = ['🧠', '📚', '🔮', '🧩', '🎯', '🚀']
-  const [deck] = useState(() => [...emojis, ...emojis].map((e, i) => ({ id: i, emoji: e })).sort(() => Math.random() - 0.5))
+  const [deck] = useState(() => [...memoryIcons, ...memoryIcons].map((icon, i) => ({ id: i, icon, key: i % memoryIcons.length })).sort(() => Math.random() - 0.5))
   const [flipped, setFlipped] = useState<number[]>([])
-  const [matched, setMatched] = useState<string[]>([])
+  const [matched, setMatched] = useState<number[]>([])
   const [moves, setMoves] = useState(0)
   const [done, setDone] = useState(false)
   const awardXp = useAppStore((s) => s.awardXp)
+  const submitGameScore = useAppStore((s) => s.submitGameScore)
 
   const flip = (card: (typeof deck)[number]) => {
-    if (done || flipped.includes(card.id) || matched.includes(card.emoji) || flipped.length === 2) return
+    if (done || flipped.includes(card.id) || matched.includes(card.key) || flipped.length === 2) return
     const next = [...flipped, card.id]
     setFlipped(next)
     if (next.length === 2) {
       setMoves(moves + 1)
       const [a, b] = next.map((id) => deck.find((c) => c.id === id)!)
-      if (a.emoji === b.emoji) {
-        const newMatched = [...matched, a.emoji]
+      if (a.key === b.key) {
+        const newMatched = [...matched, a.key]
         setMatched(newMatched)
         setFlipped([])
-        if (newMatched.length === emojis.length) { setDone(true); awardXp(xp, 'game:memory-grid') }
+        if (newMatched.length === memoryIcons.length) {
+          setDone(true)
+          submitGameScore('memory-grid', Math.max(0, 1000 - moves * 50))
+          awardXp(xp, 'game:memory-grid')
+        }
       } else {
         window.setTimeout(() => setFlipped([]), 800)
       }
@@ -203,13 +222,14 @@ function MemoryGrid({ xp }: { xp: number }) {
   return (
     <div className="mx-auto max-w-lg space-y-4">
       <div className="flex items-center justify-between"><p className="text-sm font-bold text-muted">Cocokkan pasangan kartu</p><span className="pill">Langkah: {moves}</span></div>
-      {done && <div className="card text-center"><p className="font-display text-xl font-extrabold">Semua pasangan cocok! 🎉</p><p className="mt-1 text-sm text-muted">+{xp} XP diperoleh · {moves} langkah</p><button className="btn btn-primary mt-4" onClick={reset}><RotateCcw size={15} /> Main lagi</button></div>}
+      {done && <div className="card text-center"><p className="font-display text-xl font-extrabold">Semua pasangan cocok!</p><p className="mt-1 text-sm text-muted">+{xp} XP diperoleh, {moves} langkah</p><button className="btn btn-primary mt-4" onClick={reset}><RotateCcw size={15} /> Main lagi</button></div>}
       <div className="grid grid-cols-4 gap-2.5">
         {deck.map((card) => {
-          const isFlipped = flipped.includes(card.id) || matched.includes(card.emoji)
+          const isFlipped = flipped.includes(card.id) || matched.includes(card.key)
+          const Icon = card.icon
           return (
-            <button key={card.id} onClick={() => flip(card)} className={cn('grid aspect-square place-items-center rounded-2xl border text-3xl transition-all', isFlipped ? 'border-accent bg-accent-soft' : 'border-line bg-surface hover:border-accent/50')} aria-label={isFlipped ? card.emoji : 'Kartu tertutup'}>
-              {isFlipped ? card.emoji : '❔'}
+            <button key={card.id} onClick={() => flip(card)} className={cn('grid aspect-square place-items-center rounded-2xl border transition-all', isFlipped ? 'border-accent bg-accent-soft text-accent' : 'border-line bg-surface text-muted hover:border-accent/50')} aria-label={isFlipped ? 'Kartu terbuka' : 'Kartu tertutup'}>
+              {isFlipped ? <Icon size={32} /> : <HelpCircle size={28} />}
             </button>
           )
         })}
@@ -229,7 +249,9 @@ export function GamePlay() {
     <div className="space-y-5">
       <button onClick={() => navigate('/app/games')} className="inline-flex items-center gap-1.5 text-sm font-bold text-muted hover:text-accent"><ArrowLeft size={15} /> Kembali ke Games</button>
       <div className="flex items-center gap-3">
-        <span className="grid h-14 w-14 place-items-center rounded-2xl text-3xl" style={{ background: `${game.accent}22` }}>{game.art}</span>
+        <span className="grid h-14 w-14 place-items-center rounded-2xl" style={{ background: `${game.accent}22`, color: game.accent }}>
+          {(() => { const Icon = gameIcons[game.category]; return <Icon size={30} /> })()}
+        </span>
         <div><h1 className="font-display text-xl font-extrabold sm:text-2xl">{game.title}</h1><p className="text-sm text-muted">{game.description}</p></div>
         <span className="pill ml-auto hidden sm:inline-flex"><Check size={13} /> +{game.xp} XP</span>
       </div>

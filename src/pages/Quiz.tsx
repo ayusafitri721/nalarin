@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowRight, Check, Clock, Lightbulb, RotateCcw, X } from 'lucide-react'
+import { ArrowRight, Check, Clock, Lightbulb, PartyPopper, RotateCcw, X } from 'lucide-react'
 import { EmptyState, ProgressBar } from '@/components/ui'
 import { getQuiz, quizzes } from '@/data/content'
 import { cn } from '@/lib/utils'
@@ -134,7 +134,7 @@ export function QuizResultPage() {
       <div className="card relative overflow-hidden text-center !py-10">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-accent-soft blur-2xl" />
         <div className="relative">
-          <span className="text-5xl">{passed ? '🎉' : '💪'}</span>
+          <span className="mx-auto block w-fit">{passed ? <PartyPopper size={48} className="text-success" /> : <RotateCcw size={48} className="text-accent" />}</span>
           <h1 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">{passed ? 'Kuis selesai!' : 'Terus berlatih!'}</h1>
           <p className="mt-2 text-sm text-muted">{quiz.topicTitle}</p>
           <p className="mt-6 font-display text-5xl font-extrabold text-accent">{percentage}%</p>

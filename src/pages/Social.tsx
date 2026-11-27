@@ -1,16 +1,21 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Check, MessageCircle, Plus, Search, Send, ShieldCheck, Swords, Users, X } from 'lucide-react'
+import { ArrowLeft, Check, MessageCircle, Plus, Search, Send, ShieldCheck, Swords, Trophy, Users } from 'lucide-react'
 import { Avatar, EmptyState } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/useAppStore'
 
-const friends = [
-  { username: 'luna', name: 'Luna', color: '#E58AB6', online: true, lastActive: 'Sekarang', level: 12, common: 4 },
-  { username: 'raka', name: 'Raka', color: '#5C8DF6', online: false, lastActive: '5 jam lalu', level: 9, common: 2 },
-  { username: 'dinda', name: 'Dinda', color: '#4FB992', online: true, lastActive: 'Sekarang', level: 15, common: 6 },
-  { username: 'bima', name: 'Bima', color: '#D9A25B', online: false, lastActive: 'Kemarin', level: 7, common: 1 },
-]
+type FriendLite = {
+  username: string
+  name: string
+  color: string
+  online: boolean
+  lastActive: string
+  level: number
+  common: number
+}
+
+const friends: FriendLite[] = []
 
 export function Friends() {
   const [query, setQuery] = useState('')
@@ -43,7 +48,7 @@ export function Friends() {
                     <div className="min-w-0 flex-1">
                       <Link to={`/app/friends/${f.username}`} className="font-display text-sm font-extrabold hover:text-accent">{f.name}</Link>
                       <p className="text-xs text-muted">@{f.username} · Lv {f.level}</p>
-                      <p className="text-[11px] text-muted">{f.online ? '🟢 Online' : `Terakhir aktif ${f.lastActive}`}</p>
+                      <p className="text-[11px] text-muted">{f.online ? <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success" /> Online</span> : `Terakhir aktif ${f.lastActive}`}</p>
                     </div>
                   </div>
                   <div className="mt-4 flex gap-2">
@@ -71,14 +76,7 @@ export function Friends() {
           <section className="card">
             <h2 className="font-display text-base font-extrabold">Permintaan masuk</h2>
             <div className="mt-3 space-y-3">
-              {[{ name: 'Sari', color: '#8E82E8' }, { name: 'Fajar', color: '#E5806C' }].map((r) => (
-                <div key={r.name} className="flex items-center gap-2">
-                  <Avatar name={r.name} color={r.color} size={34} />
-                  <span className="flex-1 text-xs font-bold">{r.name}</span>
-                  <button onClick={() => showToast(`Permintaan ${r.name} diterima`, 'success')} className="grid h-7 w-7 place-items-center rounded-full bg-success/15 text-success" aria-label={`Terima ${r.name}`}><Check size={14} /></button>
-                  <button onClick={() => showToast(`Permintaan ${r.name} ditolak`, 'info')} className="grid h-7 w-7 place-items-center rounded-full bg-danger/15 text-danger" aria-label={`Tolak ${r.name}`}><X size={14} /></button>
-                </div>
-              ))}
+              <p className="text-xs text-muted">Tidak ada permintaan masuk.</p>
             </div>
           </section>
 
@@ -128,19 +126,11 @@ export function FriendProfile() {
   )
 }
 
-const conversations = [
-  { id: 'luna', name: 'Luna', color: '#E58AB6', last: 'Setuju, kita belajar jam 8 ya!', time: '10:42', unread: 2 },
-  { id: 'raka', name: 'Raka', color: '#5C8DF6', last: 'Kuis Logika-nya seru banget', time: 'Kemarin', unread: 0 },
-  { id: 'dinda', name: 'Dinda', color: '#4FB992', last: 'Cek ruang belajar yuk', time: 'Senin', unread: 0 },
-]
+const conversations: { id: string; name: string; color: string; last: string; time: string; unread: number }[] = []
 
 export function Messages() {
   const { conversationId } = useParams()
-  const [messages, setMessages] = useState([
-    { from: 'them', text: 'Hai! Sudah lanjut belajar logic arena?', time: '10:38' },
-    { from: 'me', text: 'Iya, baru selesai 2 modul 😄', time: '10:40' },
-    { from: 'them', text: 'Setuju, kita belajar jam 8 ya!', time: '10:42' },
-  ])
+  const [messages, setMessages] = useState<{ from: string; text: string; time: string }[]>([])
   const [input, setInput] = useState('')
   const conversation = conversations.find((c) => c.id === conversationId)
 
@@ -149,6 +139,10 @@ export function Messages() {
     if (!input.trim()) return
     setMessages([...messages, { from: 'me', text: input.trim(), time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) }])
     setInput('')
+  }
+
+  if (conversationId && !conversation) {
+    return <EmptyState title="Percakapan tidak tersedia" description="Chat belum tersimpan untuk akun ini." action={<Link className="btn btn-primary" to="/app/messages">Kembali ke pesan</Link>} />
   }
 
   if (conversationId) {
@@ -199,27 +193,27 @@ export function Messages() {
 export function StudyRooms() {
   const [joined, setJoined] = useState<string[]>([])
   const showToast = useAppStore((s) => s.showToast)
-  const rooms = [
-    { id: 'r1', name: 'Logika & Puzzle', desc: 'Bahas teka-teki dan strategi pemecahan masalah.', members: 8, topic: 'Logic Arena' },
-    { id: 'r2', name: 'Science Club', desc: 'Eksplorasi fenomena alam dan eksperimen sederhana.', members: 12, topic: 'Science Lab' },
-    { id: 'r3', name: 'Belajar Bahasa', desc: 'Latih kosakata dan percakapan santai.', members: 5, topic: 'Language Sphere' },
-  ]
+  const rooms: { id: string; name: string; desc: string; members: number; topic: string }[] = []
   return (
     <div className="space-y-5">
       <div><span className="pill"><Users size={13} /> Group Study</span><h1 className="mt-3 font-display text-2xl font-extrabold">Study Room</h1><p className="mt-1.5 text-sm text-muted">Ruang kolaborasi teks dan materi bersama. Video call bukan bagian dari versi awal.</p></div>
-      <div className="grid gap-3 md:grid-cols-2">
-        {rooms.map((r) => (
-          <div key={r.id} className="card">
-            <p className="pill !text-[10px]">{r.topic}</p>
-            <h2 className="mt-3 font-display text-base font-extrabold">{r.name}</h2>
-            <p className="mt-1 text-xs text-muted">{r.desc}</p>
-            <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-muted">{r.members} anggota</span>
-              <button onClick={() => { setJoined([...joined, r.id]); showToast(`Kamu bergabung dengan ${r.name}`, 'success') }} disabled={joined.includes(r.id)} className="btn btn-primary !py-2 !text-xs">{joined.includes(r.id) ? 'Tergabung' : 'Gabung'}</button>
+      {rooms.length ? (
+        <div className="grid gap-3 md:grid-cols-2">
+          {rooms.map((r) => (
+            <div key={r.id} className="card">
+              <p className="pill !text-[10px]">{r.topic}</p>
+              <h2 className="mt-3 font-display text-base font-extrabold">{r.name}</h2>
+              <p className="mt-1 text-xs text-muted">{r.desc}</p>
+              <div className="mt-4 flex items-center justify-between">
+                <span className="text-xs text-muted">{r.members} anggota</span>
+                <button onClick={() => { setJoined([...joined, r.id]); showToast(`Kamu bergabung dengan ${r.name}`, 'success') }} disabled={joined.includes(r.id)} className="btn btn-primary !py-2 !text-xs">{joined.includes(r.id) ? 'Tergabung' : 'Gabung'}</button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <EmptyState icon={<Users size={24} />} title="Belum ada study room" description="Ruang belajar bersama akan muncul di sini saat tersedia." />
+      )}
     </div>
   )
 }
@@ -265,7 +259,7 @@ export function Duel() {
         </div>
       ) : done ? (
         <div className="card text-center !py-10">
-          <span className="text-5xl">🏆</span>
+          <Trophy size={48} className="mx-auto text-warning" />
           <h2 className="mt-4 font-display text-2xl font-extrabold">Duel selesai!</h2>
           <p className="mt-2 text-sm text-muted">Skor kamu: {score}/{questions.length} · +15 XP</p>
           <p className="mt-1 text-xs text-muted">Hasil disimpan dan ditampilkan kepada kedua pemain.</p>
@@ -285,23 +279,14 @@ export function Duel() {
 }
 
 export function Leaderboard() {
-  const [tab, setTab] = useState('Friends')
   const [hidden, setHidden] = useState(false)
-  const entries = [
-    { name: 'Dinda', xp: 4820, level: 18, color: '#4FB992' },
-    { name: 'Luna', xp: 3950, level: 15, color: '#E58AB6' },
-    { name: 'Kamu', xp: 2350, level: 10, color: '#7563E8' },
-    { name: 'Raka', xp: 1980, level: 9, color: '#5C8DF6' },
-    { name: 'Bima', xp: 1240, level: 7, color: '#D9A25B' },
-  ]
+  const user = useAppStore((s) => s.user)
+  const entries = user ? [{ name: user.name, xp: user.xp, level: user.level, color: user.avatar }] : []
   return (
     <div className="mx-auto max-w-2xl space-y-5">
       <div><span className="pill">Leaderboard</span><h1 className="mt-3 font-display text-2xl font-extrabold">Peringkat</h1></div>
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {['Friends', 'Weekly', 'Monthly', 'All Time'].map((t) => <button key={t} onClick={() => setTab(t)} className={cn('shrink-0 rounded-full px-4 py-2 text-xs font-bold', tab === t ? 'bg-accent text-white' : 'bg-surface text-muted')}>{t}</button>)}
-      </div>
       <div className="space-y-2.5">
-        {entries.filter((e) => !(hidden && e.name === 'Kamu')).map((e, i) => (
+        {entries.filter(() => !hidden).map((e, i) => (
           <div key={e.name} className="card flex items-center gap-3">
             <span className={cn('grid h-8 w-8 place-items-center rounded-full font-display text-sm font-extrabold', i === 0 ? 'bg-warning/20 text-warning' : 'bg-bg text-muted')}>{i + 1}</span>
             <Avatar name={e.name} color={e.color} size={38} />

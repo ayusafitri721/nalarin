@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Clock, Search, Trash2, X } from 'lucide-react'
+import { BookOpen, Clock, Gamepad2, Search, Target, Trash2, X } from 'lucide-react'
 import { EmptyState } from '@/components/ui'
 import { games, quests, topics } from '@/data/content'
 import { cn } from '@/lib/utils'
@@ -72,19 +72,19 @@ export default function SearchPage() {
             <div className="space-y-2.5">
               {(tab === 'all' || tab === 'topics') && matchedTopics.map((t) => (
                 <Link key={t.id} to={`/app/topic/${t.slug}`} className="card flex items-center gap-3 hover:shadow-hover">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl text-xl" style={{ background: t.soft }}>📘</span>
+                  <span className="grid h-11 w-11 place-items-center rounded-xl" style={{ background: t.soft, color: t.accent }}><BookOpen size={20} /></span>
                   <div className="min-w-0"><p className="font-display text-sm font-extrabold">{t.title}</p><p className="text-xs text-muted">Topik · {t.difficulty}</p></div>
                 </Link>
               ))}
               {(tab === 'all' || tab === 'games') && matchedGames.map((g) => (
                 <Link key={g.slug} to={`/app/games/${g.slug}`} className="card flex items-center gap-3 hover:shadow-hover">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl text-xl" style={{ background: `${g.accent}22` }}>{g.art}</span>
+                  <span className="grid h-11 w-11 place-items-center rounded-xl" style={{ background: `${g.accent}22`, color: g.accent }}><Gamepad2 size={20} /></span>
                   <div className="min-w-0"><p className="font-display text-sm font-extrabold">{g.title}</p><p className="text-xs text-muted">Game · {g.difficulty}</p></div>
                 </Link>
               ))}
               {(tab === 'all' || tab === 'quests') && matchedQuests.map((s) => (
                 <Link key={s.id} to="/app/quest" className="card flex items-center gap-3 hover:shadow-hover">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl text-xl bg-warning/15">🎯</span>
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-warning/15 text-warning"><Target size={20} /></span>
                   <div className="min-w-0"><p className="font-display text-sm font-extrabold">{s.title}</p><p className="text-xs text-muted">Quest · {s.category}</p></div>
                 </Link>
               ))}
